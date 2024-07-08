@@ -1,16 +1,20 @@
 package com.luciana.desafio.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.OneToMany;
+
 
 @Entity
-@Table(name="tb_cliente")
 public class Cliente implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
@@ -21,6 +25,11 @@ public class Cliente implements Serializable  {
 	private String cpf;
 	private String email;
 
+	
+	// associacoes:
+	@JsonIgnore
+	@OneToMany(mappedBy = "cliente")
+	private List<Venda> vendas = new ArrayList<>();
 	
 
 	// construtores:	
@@ -67,6 +76,11 @@ public class Cliente implements Serializable  {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	
+	public List<Venda> getVendas() {
+		return vendas;
+	}
+	
 
 	
 	// hashcode e equals
@@ -86,6 +100,7 @@ public class Cliente implements Serializable  {
 		Cliente other = (Cliente) obj;
 		return Objects.equals(id, other.id);
 	}
+
 	
 	
 	
