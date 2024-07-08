@@ -24,7 +24,7 @@ public class TestConfig implements CommandLineRunner {
 		
 		Cliente cl1 = new Cliente(null, "Maria", "333.444.555.666-77", "maria@gmail.com");
 		Cliente cl2 = new Cliente(null, "Alberto", "364.256.789-80", "alberto@gmail.com");
-		Cliente cl3 = new Cliente(null, "Ana Carolina", "326.153.248-60", "anacarolina@gmai.com");
+		Cliente cl3 = new Cliente(null, "Ana Carolina", "326.153.248-60", "anacarolina@gmail.com");
 		
 		clienteRepository.saveAll(Arrays.asList(cl1, cl2, cl3));
 		
