@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.Venda;
+import com.luciana.desafio.entities.enums.StatusVenda;
 import com.luciana.desafio.repositories.ClienteRepository;
 import com.luciana.desafio.repositories.VendaRepository;
 
@@ -35,10 +36,10 @@ public class TestConfig implements CommandLineRunner {
 		
 		//
 		
-		Venda v1 = new Venda(null, Instant.parse("2024-02-10T19:53:00Z"), cl1);
-		Venda v2 = new Venda(null, Instant.parse("2024-03-15T10:14:00Z"), cl2);
-		Venda v3 = new Venda(null, Instant.parse("2024-03-20T22:37:00Z"), cl2);
-		Venda v4 = new Venda(null, Instant.parse("2024-05-01T18:00:00Z"), cl3);
+		Venda v1 = new Venda(null, Instant.parse("2024-02-10T19:53:00Z"), StatusVenda.PENDENTE, cl1);
+		Venda v2 = new Venda(null, Instant.parse("2024-03-15T10:14:00Z"), StatusVenda.FECHADA, cl2);
+		Venda v3 = new Venda(null, Instant.parse("2024-03-20T22:37:00Z"), StatusVenda.FECHADA, cl2);
+		Venda v4 = new Venda(null, Instant.parse("2024-05-01T18:00:00Z"), StatusVenda.FECHADA, cl3);
 		
 		vendaRepository.saveAll(Arrays.asList(v1, v2, v3, v4));
 		
