@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import com.luciana.desafio.entities.Cliente;
+import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.enums.StatusVenda;
 import com.luciana.desafio.repositories.ClienteRepository;
+import com.luciana.desafio.repositories.ProdutoRepository;
 import com.luciana.desafio.repositories.VendaRepository;
 
 @Configuration
@@ -22,6 +24,8 @@ public class TestConfig implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private VendaRepository vendaRepository;
+	@Autowired
+	private ProdutoRepository produtoRepository;
 
 	
 	
@@ -42,6 +46,17 @@ public class TestConfig implements CommandLineRunner {
 		Venda v4 = new Venda(null, Instant.parse("2024-05-01T18:00:00Z"), StatusVenda.FECHADA, cl3);
 		
 		vendaRepository.saveAll(Arrays.asList(v1, v2, v3, v4));
+		
+		//
+		
+		Produto p1 = new Produto(null, "Notebook", 3000.00, 30, true);
+		Produto p2 = new Produto(null, "Mouse", 90.00, 240, true);
+		Produto p3 = new Produto(null, "Fone sem fio", 250.00, 12, true);
+		Produto p4 = new Produto(null, "Mousepad", 60.00, 0, false);
+		Produto p5 = new Produto(null, "Monitor", 800.00, 24, true);
+		
+		produtoRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+		
 		
 	}
 	
