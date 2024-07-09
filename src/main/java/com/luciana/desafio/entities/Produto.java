@@ -1,12 +1,17 @@
 package com.luciana.desafio.entities;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Produto implements Serializable  {
@@ -19,6 +24,11 @@ public class Produto implements Serializable  {
 	private Double preco;
 	private Integer estoque;
 	private Boolean statusProd;
+	
+	
+	// associacoes:
+	@OneToMany (mappedBy = "id.produto")
+	private Set<ItemVenda> itens = new HashSet<>();
 	
 	
 	// construtores:
@@ -73,6 +83,15 @@ public class Produto implements Serializable  {
 
 	public void setStatusProd(Boolean statusProd) {
 		this.statusProd = statusProd;
+	}
+	
+	@JsonIgnore
+	public Set<Venda> getVendas() {
+		Set<Venda> set = new HashSet<>();
+		for (ItemVenda x : itens) {
+			set.add(x.getVenda());
+		}
+		return set;
 	}
 
 	

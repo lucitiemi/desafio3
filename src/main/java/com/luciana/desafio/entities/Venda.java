@@ -2,7 +2,9 @@ package com.luciana.desafio.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.luciana.desafio.entities.enums.StatusVenda;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 
 
@@ -38,7 +41,10 @@ public class Venda implements Serializable  {
 	@JoinColumn(name="id_cliente")
 	private Cliente cliente;
 
-
+	@OneToMany (mappedBy = "id.venda")
+	private Set<ItemVenda> itens = new HashSet<>();
+	
+	
 
 	// construtores:
 	public Venda() {}
@@ -86,6 +92,10 @@ public class Venda implements Serializable  {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	
+	public Set<ItemVenda> getItens() {
+		return itens;
 	}
 
 	
