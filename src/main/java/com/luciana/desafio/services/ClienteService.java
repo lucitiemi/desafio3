@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.repositories.ClienteRepository;
-import com.luciana.desafio.services.exceptions.ObjectNotFoundException;
+import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class ClienteService {
@@ -23,6 +23,6 @@ public class ClienteService {
 	
 	public Cliente findById(Integer id) {
 		Optional<Cliente> obj = repository.findById(id);
-		return obj.orElseThrow(() -> new ObjectNotFoundException("Objeto nao encontrado! Id: " + id + ", Tipo: " + Cliente.class.getName()));
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 }

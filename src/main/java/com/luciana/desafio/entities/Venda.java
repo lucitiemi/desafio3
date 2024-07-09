@@ -147,6 +147,15 @@ public class Venda implements Serializable  {
 
 	
 	
+	// to String
+	@Override
+	public String toString() {
+		return "Venda [id=" + id + ", dataVenda=" + dataVenda + ", statusVenda=" + statusVenda + ", cliente=" + cliente
+				+ ", itens=" + itens + ", pagamento=" + pagamento + "]";
+	}
+
+	
+	
 	
 	
 	

@@ -98,6 +98,15 @@ public class Pagamento implements Serializable  {
 		Pagamento other = (Pagamento) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	
+	
+	// to String
+	@Override
+	public String toString() {
+		return "Pagamento [id=" + id + ", dataPgto=" + dataPgto + ", venda=" + venda + "]";
+	}
+	
 	
 	
 	
