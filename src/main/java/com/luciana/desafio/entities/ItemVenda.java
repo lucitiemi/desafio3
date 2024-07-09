@@ -17,18 +17,18 @@ public class ItemVenda implements Serializable  {
 	private ItemVendaPK id = new ItemVendaPK();
 	
 	private Integer quantidade;
-	private Double price;
+	private Double preco;
 	
 	
 	// contrutores:
 	public ItemVenda() {}
 
-	public ItemVenda(Venda venda, Produto produto, Integer quantidade, Double price) {
+	public ItemVenda(Venda venda, Produto produto, Integer quantidade, Double preco) {
 		super();
 		id.setVenda(venda);
 		id.setProduto(produto);
 		this.quantidade = quantidade;
-		this.price = price;
+		this.preco = preco;
 	}
 
 	
@@ -59,13 +59,22 @@ public class ItemVenda implements Serializable  {
 	}
 
 	public Double getPrice() {
-		return price;
+		return preco;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
+	public void setPrice(Double preco) {
+		this.preco = preco;
 	}
 
+	
+	
+	// metodos:
+	public Double getSubTotal() {
+		return preco * quantidade;
+	}
+	
+	
+	
 	
 	// hashcode e equals
 	@Override

@@ -113,6 +113,20 @@ public class Venda implements Serializable  {
 	}
 	
 	
+	
+	// metodos:
+	public Double getTotal() {
+		double soma = 0.0;
+		for (ItemVenda x : itens) {
+			soma += x.getSubTotal();
+		}
+		return soma;		
+	}
+	
+	
+	
+	
+	
 	// hashcode e equals
 	@Override
 	public int hashCode() {
