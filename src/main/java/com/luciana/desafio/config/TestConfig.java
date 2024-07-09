@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
+import com.luciana.desafio.entities.Pagamento;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.enums.StatusVenda;
@@ -77,6 +78,17 @@ public class TestConfig implements CommandLineRunner {
 	
 		itemVendaRepository.saveAll(Arrays.asList(it1, it2, it3, it4, it5, it6));
 		
+		
+		// inserindo pagamentos
+		
+		Pagamento pg1 = new Pagamento(null, Instant.parse("2024-03-15T11:00:00Z"), v2);
+		Pagamento pg2 = new Pagamento(null, Instant.parse("2024-03-22T08:15:00Z"), v3);
+		Pagamento pg3 = new Pagamento(null, Instant.parse("2024-05-01T22:58:00Z"), v4);
+		v2.setPagamento(pg1);
+		v3.setPagamento(pg2);
+		v4.setPagamento(pg3);
+		
+		vendaRepository.saveAll(Arrays.asList(v2, v3, v4));
 		
 	}
 	

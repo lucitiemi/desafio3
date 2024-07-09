@@ -9,6 +9,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.luciana.desafio.entities.enums.StatusVenda;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 
 
@@ -43,6 +45,10 @@ public class Venda implements Serializable  {
 
 	@OneToMany (mappedBy = "id.venda")
 	private Set<ItemVenda> itens = new HashSet<>();
+		
+	@OneToOne (mappedBy = "venda", cascade = CascadeType.ALL)
+	private Pagamento pagamento;
+	
 	
 	
 
@@ -98,7 +104,13 @@ public class Venda implements Serializable  {
 		return itens;
 	}
 
-	
+	public Pagamento getPagamento() {
+		return pagamento;
+	}
+
+	public void setPagamento(Pagamento pagamento) {
+		this.pagamento = pagamento;
+	}
 	
 	
 	// hashcode e equals
@@ -118,6 +130,8 @@ public class Venda implements Serializable  {
 		Venda other = (Venda) obj;
 		return Objects.equals(id, other.id);
 	}
+
+	
 	
 	
 	
