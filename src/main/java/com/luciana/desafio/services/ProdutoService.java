@@ -40,7 +40,7 @@ public class ProdutoService {
 	
 	
 	
-	// Para deletar produto - ARRUMAR CÓDIGO PARA INATIVAR PRODUTO ASSICIADO A VENDA
+	// Para deletar produto 
 	public void deletar(Integer id) {
 		
 		try {
@@ -56,7 +56,8 @@ public class ProdutoService {
 	
 	
 	
-	// Para atualizar um produto
+	
+	// Para atualizar produto
 	public Produto atualizar(Integer id, Produto obj) {
 		try {
 			Produto entity = repository.getReferenceById(id);
@@ -71,6 +72,7 @@ public class ProdutoService {
 	private void atualizarDados(Produto entity, Produto obj) {
 		entity.setDescricao(obj.getDescricao());
 		entity.setPreco(obj.getPreco());
+		entity.setEstoque(obj.getEstoque());
 		entity.setStatusProd(obj.getStatusProd());
 	}
 	
