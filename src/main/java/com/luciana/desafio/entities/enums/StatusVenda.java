@@ -2,9 +2,9 @@ package com.luciana.desafio.entities.enums;
 
 public enum StatusVenda {
 	
-	PENDENTE(1),
-	FECHADA(2),
-	CANCELADA(3);
+	PENDENTE(0),
+	FECHADA(1),
+	CANCELADA(2);
 	
 	private int code;
 	

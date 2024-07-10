@@ -1,20 +1,19 @@
 package com.luciana.desafio;
 
-import java.util.Scanner;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.luciana.desafio.menus.ProdutoMenu;
 
 @SpringBootApplication
 public class Desafio3Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Desafio3Application.class, args);
-		
+		/*
 		Scanner sc = new Scanner(System.in);
 		
+		
+		//ProdutoMenu produtoMenu = new ProdutoMenu();
 		int opcao = 0;
 		
 		do {
@@ -31,7 +30,7 @@ public class Desafio3Application {
 				break;
 			}
 			case 1: {
-				ProdutoMenu produtoMenu = new ProdutoMenu();
+				
 				produtoMenu.menu();
 				break;
 			}
@@ -52,7 +51,7 @@ public class Desafio3Application {
 		
 	
 		sc.close();
-		
+		*/ 
 		
 	}
 

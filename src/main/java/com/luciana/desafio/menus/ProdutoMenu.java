@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.services.ProdutoService;
 
 
 public class ProdutoMenu {
 
+	@Autowired
 	private ProdutoService produtoService;
 
 	public ProdutoMenu() {

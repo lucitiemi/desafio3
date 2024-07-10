@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.luciana.desafio.dto.ItemVendaDTO;
+import com.luciana.desafio.dto.VendaDTO;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.services.VendaService;
 
@@ -42,10 +44,15 @@ public class VendaResource {
 	
 	// Para inserir venda
 	@PostMapping
-	public ResponseEntity<Venda> inserir(@RequestBody Venda obj) {
-		obj = service.inserir(obj);
-		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj);
+	public ResponseEntity<Venda> inserir(@RequestBody VendaDTO obj) {
+		Venda venda = service.inserir(obj);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(venda.getId()).toUri();
+		return ResponseEntity.created(uri).body(venda);
+	}
+	
+	@PostMapping(value="/inserir-item")
+	public ResponseEntity<Venda> inserirItem(@RequestBody ItemVendaDTO obj) {
+		return ResponseEntity.ok().body(service.inserirItem(obj));
 	}
 	
 	
@@ -65,6 +72,11 @@ public class VendaResource {
 		obj = service.atualizar(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
+	
+	
+	// cancelar venda
+	 * 
+	 * 
 	*/
 	
 

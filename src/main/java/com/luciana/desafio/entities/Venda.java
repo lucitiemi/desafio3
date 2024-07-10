@@ -34,7 +34,7 @@ public class Venda implements Serializable  {
 	private Instant dataVenda;
 	
 	
-	private Integer statusVenda;
+	private StatusVenda statusVenda;
 	
 	
 	
@@ -53,13 +53,24 @@ public class Venda implements Serializable  {
 	
 
 	// construtores:
-	public Venda() {}
+	public Venda() {
+		this.statusVenda = StatusVenda.PENDENTE;
+		
+	}
+	
+	public Venda(Integer id, Instant dataVenda, Cliente cliente) {
+		super();
+		this.id = id;
+		this.dataVenda = dataVenda;
+		this.statusVenda = StatusVenda.PENDENTE;
+		this.cliente = cliente;
+	}
 	
 	public Venda(Integer id, Instant dataVenda, StatusVenda statusVenda, Cliente cliente) {
 		super();
 		this.id = id;
 		this.dataVenda = dataVenda;
-		setStatusVenda(statusVenda); 
+		this.statusVenda = statusVenda;
 		this.cliente = cliente;
 	}
 
@@ -83,12 +94,12 @@ public class Venda implements Serializable  {
 	}
 	
 	public StatusVenda getStatusVenda() {
-		return StatusVenda.valueOf(statusVenda);
+		return statusVenda;
 	}
 
 	public void setStatusVenda(StatusVenda statusVenda) {
 		if (statusVenda != null) {
-			this.statusVenda = statusVenda.getCode();
+			this.statusVenda = statusVenda;
 		}
 	}
 
