@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.entities.Pagamento;
+import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.repositories.PagamentoRepository;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
@@ -31,10 +32,10 @@ public class PagamentoService {
 	
 	
 	// Para criar um novo pagamento
-	public Pagamento criar(Integer id, Instant dataPgto) {
+	public Pagamento criar(Venda venda, Instant dataPgto) {
 		Pagamento pagamento = new Pagamento();
-		pagamento.setId(id);
 		pagamento.setDataPgto(dataPgto);
+		pagamento.setVenda(venda);
 		return repository.save(pagamento);
 		
 		
