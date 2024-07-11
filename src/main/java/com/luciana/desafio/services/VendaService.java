@@ -13,6 +13,7 @@ import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
+import com.luciana.desafio.entities.enums.StatusVenda;
 import com.luciana.desafio.entities.pk.ItemVendaPK;
 import com.luciana.desafio.repositories.VendaRepository;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
@@ -101,19 +102,15 @@ public class VendaService {
         
 		return repository.save(venda);	
 	}
+		
 	
-	
-
-
-	
-	/*
 	// Para deletar venda
 	public void deletar(Integer id) {
 		repository.deleteById(id);
 	}
 	
 	
-	
+
 	// Para atualizar um venda
 	public Venda atualizar(Integer id, Venda obj) {
 		Venda entity = repository.getReferenceById(id);
@@ -122,12 +119,19 @@ public class VendaService {
 	}
 
 	private void atualizarDados(Venda entity, Venda obj) {
-		entity.setCliente(obj.getCliente()); 
 		entity.setDataVenda(obj.getDataVenda());
 		entity.setStatusVenda(obj.getStatusVenda());
 	}
 	
-	*/
 	
+	// Para cancelar venda
+	public Venda cancelarVenda(Integer id) {
+		Venda entity = repository.getReferenceById(id);
+		entity.setStatusVenda(StatusVenda.CANCELADA);
+		return repository.save(entity);		
+	}
+
+	
+
 	
 }

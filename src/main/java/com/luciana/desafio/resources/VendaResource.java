@@ -67,6 +67,7 @@ public class VendaResource {
 		return ResponseEntity.ok().body(venda);
     }
 	
+	
 	// Para atualizar itemVenda	
 	@PutMapping(value = "/{vendaId}/item/{produtoId}")
 	public ResponseEntity<Venda> atualizar(@PathVariable Integer vendaId, @PathVariable Integer produtoId, @RequestBody ItemVendaAtualizarDTO obj) {
@@ -74,9 +75,7 @@ public class VendaResource {
 		return ResponseEntity.ok().body(venda);
 	}
 	
-	
-	
-	/*
+		
 	// Para deletar venda
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Integer id) {
@@ -84,9 +83,9 @@ public class VendaResource {
 		return ResponseEntity.noContent().build();
 	}
 	
+
 	
-	
-	// Para atualizar um venda
+	// Para atualizar um venda (somente data e status)
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Venda> atualizar(@PathVariable Integer id, @RequestBody Venda obj) {
 		obj = service.atualizar(id, obj);
@@ -94,10 +93,12 @@ public class VendaResource {
 	}
 	
 	
-	// cancelar venda
-	 * 
-	 * 
-	*/
+	// Para cancelar venda
+	@PutMapping(value = "/cancelar/{id}")
+	public ResponseEntity<Venda> cancelar(@PathVariable Integer id) {
+		Venda venda = service.cancelarVenda(id);
+		return ResponseEntity.ok().body(venda);
+	}
 	
 
 }
