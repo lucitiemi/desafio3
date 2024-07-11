@@ -6,12 +6,14 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
 import com.luciana.desafio.dto.VendaDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
+import com.luciana.desafio.entities.pk.ItemVendaPK;
 import com.luciana.desafio.repositories.VendaRepository;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
@@ -43,11 +45,11 @@ public class VendaService {
 	
 	
 	
-	// Para inserir venda
-	public Venda inserir(VendaDTO obj) {
+	// Para criar nova venda
+	public Venda inserir(VendaDTO dto) {
 		Venda venda = new Venda();
-		venda.setDataVenda(obj.dataVenda());
-		Cliente cliente = clienteService.findById(obj.clienteId());
+		venda.setDataVenda(dto.dataVenda());
+		Cliente cliente = clienteService.findById(dto.clienteId());
 		venda.setCliente(cliente);
 		return repository.save(venda);
 	}
@@ -57,11 +59,52 @@ public class VendaService {
 	public Venda inserirItem(ItemVendaDTO dto) {
 		Venda venda = findById(dto.vendaId());
 		Produto produto = produtoService.findById(dto.produtoId());
+		
 		ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
+		
 		venda.getItens().add(item);
 		return repository.save(venda);
 	}
 	
+	
+	// Para retirar item na venda											// so pode deletar se o status estiver PENDENTE!
+	public Venda retirarItemVenda(Integer vendaId, Integer produtoId) {
+		
+		Venda venda = findById(vendaId);
+		Produto produto = produtoService.findById(produtoId);
+		
+		ItemVendaPK itemVendaPK = new ItemVendaPK();
+        itemVendaPK.setVenda(venda);
+        itemVendaPK.setProduto(produto); 
+               
+        itemVendaService.deletar(itemVendaPK);
+        
+		return repository.save(venda);	
+
+	}
+	
+	 
+	// Para atualizar itemVenda												// so pode deletar se o status estiver PENDENTE!
+	public Venda atualizarItemVenda(Integer vendaId, Integer produtoId, ItemVendaAtualizarDTO dto) {
+		Venda venda = findById(vendaId);
+		Produto produto = produtoService.findById(produtoId);
+		
+		ItemVendaPK itemVendaPK = new ItemVendaPK();
+        itemVendaPK.setVenda(venda);
+        itemVendaPK.setProduto(produto); 
+               
+        ItemVenda itemVenda = new ItemVenda();
+        itemVenda.setQuantidade(dto.quantidade());
+        itemVenda.setPrice(dto.price());
+        
+        itemVendaService.atualizar(itemVendaPK, itemVenda);
+        
+		return repository.save(venda);	
+	}
+	
+	
+
+
 	
 	/*
 	// Para deletar venda

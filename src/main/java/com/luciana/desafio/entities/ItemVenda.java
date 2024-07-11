@@ -98,7 +98,9 @@ public class ItemVenda implements Serializable  {
 	// to String
 	@Override
 	public String toString() {
-		return "ItemVenda [id=" + id + ", quantidade=" + quantidade + ", preco=" + preco + "]";
+		return "ItemVenda [idProd=" + id.getProduto().getId() + ", descricao=" + id.getProduto().getDescricao() + 
+				", quantidade=" + quantidade + ", preco=" + preco + 
+				", idVenda=" + id.getVenda().getId() + "]";
 	}
 	
 	
