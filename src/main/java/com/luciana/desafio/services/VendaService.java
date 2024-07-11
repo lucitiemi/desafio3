@@ -1,5 +1,6 @@
 package com.luciana.desafio.services;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,7 @@ import com.luciana.desafio.dto.ItemVendaDTO;
 import com.luciana.desafio.dto.VendaDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
+import com.luciana.desafio.entities.Pagamento;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.enums.StatusVenda;
@@ -32,6 +34,9 @@ public class VendaService {
 	
 	@Autowired
 	private ItemVendaService itemVendaService;
+	
+	@Autowired
+	private PagamentoService pagamentoService;
 	
 	
 	// Para consultar venda
@@ -130,8 +135,22 @@ public class VendaService {
 		entity.setStatusVenda(StatusVenda.CANCELADA);
 		return repository.save(entity);		
 	}
+	
+	
+	// Para gerar pagamento da venda
+	public Venda pagar(Integer vendaId, Instant dataPgto) {
+		Venda venda = repository.getReferenceById(vendaId);
+				
+		Pagamento pagamento = new Pagamento();
+		pagamentoService.criar(vendaId, dataPgto);
+		
+		venda.setPagamento(pagamento);
+		venda.setStatusVenda(StatusVenda.FECHADA);
+				
+		return repository.save(venda);
+	}
 
 	
-
+	 
 	
 }

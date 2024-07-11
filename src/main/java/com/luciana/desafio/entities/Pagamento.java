@@ -7,9 +7,8 @@ import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 
@@ -19,8 +18,7 @@ public class Pagamento implements Serializable  {
 	private static final long serialVersionUID = 1L;
 	
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id	
 	private Integer id;
 	private Instant dataPgto;
 	
@@ -29,6 +27,7 @@ public class Pagamento implements Serializable  {
 	@JsonIgnore
 	@OneToOne
 	@MapsId
+	@JoinColumn(name = "venda_id")
 	private Venda venda;
 	
 	
@@ -106,10 +105,6 @@ public class Pagamento implements Serializable  {
 	public String toString() {
 		return "Pagamento [id=" + id + ", dataPgto=" + dataPgto + ", venda=" + venda + "]";
 	}
-	
-	
-	
-	
 	
 
 }

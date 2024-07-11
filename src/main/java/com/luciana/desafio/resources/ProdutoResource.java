@@ -50,16 +50,14 @@ public class ProdutoResource {
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-	
-	
+		
 	// Para deletar produto
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Integer id) {
 		service.deletar(id);
 		return ResponseEntity.noContent().build();
 	}
-	
-	
+		
 	
 	// Para atualizar um produto
 	@PutMapping(value = "/{id}")
@@ -70,7 +68,7 @@ public class ProdutoResource {
 	
 	
 	// Para inativar um produto
-		@PutMapping(value = "/inativar/{id}")
+		@PutMapping(value = "/{id}/inativar")
 		public ResponseEntity<Produto> inativar(@PathVariable Integer id) {
 			Produto produto = service.inativarProduto(id);
 			return ResponseEntity.ok().body(produto);

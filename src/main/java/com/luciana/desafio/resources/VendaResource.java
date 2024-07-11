@@ -1,6 +1,7 @@
 package com.luciana.desafio.resources;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,9 +95,18 @@ public class VendaResource {
 	
 	
 	// Para cancelar venda
-	@PutMapping(value = "/cancelar/{id}")
+	@PutMapping(value = "/{id}/cancelar")
 	public ResponseEntity<Venda> cancelar(@PathVariable Integer id) {
 		Venda venda = service.cancelarVenda(id);
+		return ResponseEntity.ok().body(venda);
+	}
+	
+	
+	// Para gerar pagamento da venda
+	@PutMapping(value = "/{id}/pagar")
+	public ResponseEntity<Venda> pagar(@PathVariable Integer id) {
+		Instant dataPgto = Instant.now();
+		Venda venda = service.pagar(id, dataPgto);
 		return ResponseEntity.ok().body(venda);
 	}
 	
