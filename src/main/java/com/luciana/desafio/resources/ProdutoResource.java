@@ -68,5 +68,14 @@ public class ProdutoResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	
+	// Para inativar um produto
+		@PutMapping(value = "/inativar/{id}")
+		public ResponseEntity<Produto> inativar(@PathVariable Integer id) {
+			Produto produto = service.inativarProduto(id);
+			return ResponseEntity.ok().body(produto);
+		}
+	
+	
 
 }

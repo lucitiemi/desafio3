@@ -77,5 +77,17 @@ public class ProdutoService {
 	}
 	
 	
+	// Para inativar produto
+	public Produto inativarProduto(Integer id) {
+		try {
+			Produto entity = repository.getReferenceById(id);
+			entity.setStatusProd(false);
+			return repository.save(entity);	
+		}
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);	
+		}
+	}
 	
+
 }
