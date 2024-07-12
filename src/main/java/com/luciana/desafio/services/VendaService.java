@@ -152,14 +152,12 @@ public class VendaService {
 	
 	
 	// Para gerar pagamento da venda
-	public Venda pagar(Integer vendaId, Instant dataPgto) {
+	public Venda pagar(Integer vendaId) {
 		Venda venda = repository.getReferenceById(vendaId);
-				
+		Instant dataPgto = Instant.now();
 		Pagamento pagamento = pagamentoService.criar(venda, dataPgto);
-		
 		venda.setPagamento(pagamento);
 		venda.setStatusVenda(StatusVenda.FECHADA);
-				
 		return repository.save(venda);
 	}
 

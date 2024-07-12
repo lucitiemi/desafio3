@@ -1,7 +1,6 @@
 package com.luciana.desafio.resources;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,10 +116,17 @@ public class VendaResource {
 	// Para gerar pagamento da venda
 	@PutMapping(value = "/{id}/pagar")
 	public ResponseEntity<Venda> pagar(@PathVariable Integer id) {
-		Instant dataPgto = Instant.now();
-		Venda venda = service.pagar(id, dataPgto);
+		Venda venda = service.pagar(id);
 		return ResponseEntity.ok().body(venda);
 	}
 	
 
+	
+	
+	
+	
+	
+	
+	
+	
 }

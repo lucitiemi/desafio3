@@ -37,7 +37,10 @@ public class PagamentoService {
 		pagamento.setDataPgto(dataPgto);
 		pagamento.setVenda(venda);
 		return repository.save(pagamento);
-		
-		
 	}
 }
+
+
+
+
+
