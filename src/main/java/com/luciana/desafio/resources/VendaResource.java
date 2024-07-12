@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.luciana.desafio.dto.ConsultaDataDTO;
 import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
 import com.luciana.desafio.dto.VendaDTO;
@@ -30,20 +31,31 @@ public class VendaResource {
 	private VendaService service;
 	
 	
-	// Para consultar venda
+	// Para consultar todas as vendas
 	@GetMapping
 	public ResponseEntity<List<Venda>> findAll() {
 		 List<Venda> list = service.findAll();
 		 return ResponseEntity.ok().body(list);
 	 }
 
+	
+	// Para consultar uma venda por id
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Venda> find(@PathVariable Integer id) {
-		
 		Venda obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 
 	}
+	
+		
+	// Para listar vendas entre datas
+	@PostMapping(value = "/consulta-entre-datas")
+	public ResponseEntity<List<Venda>> consultaEntreDatas(@RequestBody ConsultaDataDTO dto) {
+		List<Venda> list = service.consultaEntreDatas(dto);
+		return ResponseEntity.ok().body(list);
+	 }
+	
+	
 	
 	
 	// Para criar nova venda

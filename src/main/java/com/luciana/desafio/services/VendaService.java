@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.luciana.desafio.dto.ConsultaDataDTO;
 import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
 import com.luciana.desafio.dto.VendaDTO;
@@ -39,15 +40,28 @@ public class VendaService {
 	private PagamentoService pagamentoService;
 	
 	
-	// Para consultar venda
+	// Para consultar todas as vendas
 	public List<Venda> findAll() {
 		return repository.findAll();
 	}
 	
+	
+		
+	// Para consultar uma venda
 	public Venda findById(Integer id) {
 		Optional<Venda> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
+	
+	
+	
+	
+	// Para listar vendas entre datas
+	public List<Venda> consultaEntreDatas(ConsultaDataDTO dto) {
+		List<Venda> list = repository.findByDataVendaBetween(dto.getDataInicial(), dto.getDataFinal());
+		return list;
+	}
+	
 	
 	
 	
@@ -148,6 +162,8 @@ public class VendaService {
 				
 		return repository.save(venda);
 	}
+
+	
 
 	
 	 
