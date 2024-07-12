@@ -67,14 +67,14 @@ public class VendaResource {
 	}
 	
 	// Para inserir item na venda
-	@PostMapping(value="/inserir-item")
-	public ResponseEntity<Venda> inserirItem(@RequestBody ItemVendaDTO obj) {
-		return ResponseEntity.ok().body(service.inserirItem(obj));
+	@PostMapping(value="{vendaId}/inserir-item")
+	public ResponseEntity<Venda> inserirItem(@PathVariable Integer vendaId, @RequestBody ItemVendaDTO obj) {
+		return ResponseEntity.ok().body(service.inserirItem(vendaId, obj));
 	}
 	
 	
 	// Para retirar item na venda
-	@DeleteMapping(value="/{vendaId}/item/{produtoId}")
+	@DeleteMapping(value="/{vendaId}/deletar-item/{produtoId}")
     public ResponseEntity<Venda> retirarItemVenda(@PathVariable Integer vendaId, @PathVariable Integer produtoId) {
 		Venda venda = service.retirarItemVenda(vendaId, produtoId);
 		return ResponseEntity.ok().body(venda);
@@ -82,7 +82,7 @@ public class VendaResource {
 	
 	
 	// Para atualizar itemVenda	
-	@PutMapping(value = "/{vendaId}/item/{produtoId}")
+	@PutMapping(value = "/{vendaId}/atualizar-item/{produtoId}")
 	public ResponseEntity<Venda> atualizar(@PathVariable Integer vendaId, @PathVariable Integer produtoId, @RequestBody ItemVendaAtualizarDTO obj) {
 		Venda venda = service.atualizarItemVenda(vendaId, produtoId, obj);
 		return ResponseEntity.ok().body(venda);

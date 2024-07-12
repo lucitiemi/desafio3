@@ -76,8 +76,8 @@ public class VendaService {
 	
 	
 	// Para inserir item na venda
-	public Venda inserirItem(ItemVendaDTO dto) {
-		Venda venda = findById(dto.vendaId());
+	public Venda inserirItem(Integer vendaId, ItemVendaDTO dto) {
+		Venda venda = findById(vendaId);
 		Produto produto = produtoService.findById(dto.produtoId());
 		
 		ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
@@ -163,6 +163,9 @@ public class VendaService {
 		return repository.save(venda);
 	}
 
+	
+
+	// Para gerar relatorio:
 	
 
 	
