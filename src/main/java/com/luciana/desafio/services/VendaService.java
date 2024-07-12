@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import com.luciana.desafio.dto.ConsultaDataDTO;
 import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
-import com.luciana.desafio.dto.VendaDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
 import com.luciana.desafio.entities.Pagamento;
@@ -66,10 +65,11 @@ public class VendaService {
 	
 	
 	// Para criar nova venda
-	public Venda inserir(VendaDTO dto) {
+	public Venda criar(Integer clienteId) {
 		Venda venda = new Venda();
-		venda.setDataVenda(dto.dataVenda());
-		Cliente cliente = clienteService.findById(dto.clienteId());
+		Instant dataPgto = Instant.now();
+		venda.setDataVenda(dataPgto);
+		Cliente cliente = clienteService.findById(clienteId);
 		venda.setCliente(cliente);
 		return repository.save(venda);
 	}

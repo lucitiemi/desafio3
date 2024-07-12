@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.luciana.desafio.dto.ConsultaDataDTO;
 import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
-import com.luciana.desafio.dto.VendaDTO;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.services.VendaService;
 
@@ -54,13 +54,11 @@ public class VendaResource {
 		return ResponseEntity.ok().body(list);
 	 }
 	
-	
-	
-	
+		
 	// Para criar nova venda
-	@PostMapping
-	public ResponseEntity<Venda> inserir(@RequestBody VendaDTO obj) {
-		Venda venda = service.inserir(obj);
+	@PostMapping(value = "/criar-venda")
+	public ResponseEntity<Venda> criar(@RequestParam (value = "cliente-id") Integer clienteId) {
+		Venda venda = service.criar(clienteId);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(venda.getId()).toUri();
 		return ResponseEntity.created(uri).body(venda);
 	}
