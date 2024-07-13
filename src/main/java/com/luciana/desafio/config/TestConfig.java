@@ -49,7 +49,7 @@ public class TestConfig implements CommandLineRunner {
 		// inserindo vendas
 		
 		Venda v1 = new Venda(null, Instant.parse("2024-02-10T19:53:00Z"), StatusVenda.PENDENTE, cl1);
-		Venda v2 = new Venda(null, Instant.parse("2024-03-15T10:14:00Z"), StatusVenda.FECHADA, cl2);
+		Venda v2 = new Venda(null, Instant.parse("2024-03-18T10:14:00Z"), StatusVenda.FECHADA, cl2);
 		Venda v3 = new Venda(null, Instant.parse("2024-03-20T22:37:00Z"), StatusVenda.FECHADA, cl2);
 		Venda v4 = new Venda(null, Instant.parse("2024-05-01T18:00:00Z"), StatusVenda.FECHADA, cl3);
 		

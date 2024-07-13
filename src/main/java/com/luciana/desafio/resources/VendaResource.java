@@ -1,7 +1,6 @@
 package com.luciana.desafio.resources;
 
 import java.net.URI;
-import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +123,7 @@ public class VendaResource {
 	
 
 	// Para gerar relatorio mensal
-	@GetMapping(value = "/relatorio-mensal/{ano}/{mes}") // pensar qual melhor tipo de dado
+	@GetMapping(value = "/relatorio-mensal/{ano}/{mes}") 
 	public ResponseEntity<RelatorioDTO> relatorioMensal(@PathVariable Integer ano, @PathVariable Integer mes) {
 		System.out.println("1");
 		RelatorioDTO dto = service.relatorioMensal(mes, ano);
@@ -134,9 +133,9 @@ public class VendaResource {
 	
 	
 	// Para gerar relatorio semanal
-	@GetMapping(value = "/relatorio-semanal/{dataConsulta}") // pensar qual melhor tipo de dado
-	public ResponseEntity<RelatorioDTO> relatorioSemanal(@PathVariable Instant dataConsulta) {
-		RelatorioDTO dto = service.relatorioSemanal(dataConsulta);
+	@GetMapping(value = "/relatorio-semanal/{ano}/{mes}/{dia}") 
+	public ResponseEntity<RelatorioDTO> relatorioSemanal(@PathVariable Integer ano, @PathVariable Integer mes, @PathVariable Integer dia) {
+		RelatorioDTO dto = service.relatorioSemanal(ano, mes, dia);
 		return ResponseEntity.ok().body(dto);
 
 	}

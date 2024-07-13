@@ -1,5 +1,6 @@
 package com.luciana.desafio.services;
 
+import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -170,19 +171,14 @@ public class VendaService {
 	
 	// Para gerar relatorio mensal
 	public RelatorioDTO relatorioMensal(Integer mes, Integer ano) {
-		System.out.println("2");
 		
 		YearMonth mesRelat = YearMonth.of(ano, mes);		
 		
 		LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
-		
 		LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atStartOfDay();
-		System.out.println("3");
 		
 		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
 		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
-		
-		System.out.println("4");
 		
 		RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
 		
@@ -191,15 +187,26 @@ public class VendaService {
 
 
 	// Para gerar relatorio semanal
-	public RelatorioDTO relatorioSemanal(Instant dataConsulta) {
+	public RelatorioDTO relatorioSemanal(Integer ano, Integer mes, Integer dia) {
 		
-		return null;
+		LocalDateTime dataConsulta = LocalDateTime.of(ano, mes, dia, 0, 0);
+		
+		DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
+		
+		LocalDateTime dataInicialLocal = dataConsulta.minusDays(diaDaSemana.getValue() - (diaDaSemana.getValue()-1));
+		LocalDateTime dataFinalLocal = dataInicialLocal.plusDays(6);
+		
+		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
+		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
+		
+		RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
+		
+		return dto;
 	}
 	
 	
 	// Para gerar relatorio
 	public RelatorioDTO gerarRelatorio(Instant dataInicial, Instant dataFinal) {
-		
 		
 		List<Venda> lista = new ArrayList<>();
 		ConsultaDataDTO dto = new ConsultaDataDTO();
@@ -211,7 +218,6 @@ public class VendaService {
 
 		Integer qtdeTotalVendas=0, qtdeTotalVendasFechadas=0, qtdeTotalVendasPendentes=0, qtdeTotalVendasCanceladas=0;
 		Double valorTotalVendas=0.0, valorTotalVendasFechadas=0.0, valorTotalVendasPendentes=0.0, valorTotalVendasCanceladas=0.0;
-		System.out.println("5");
 		
 		for (Venda venda : lista) {
 			 qtdeTotalVendas++;
@@ -230,7 +236,6 @@ public class VendaService {
 				 valorTotalVendasCanceladas += venda.getTotal();
 			 }
 		}
-		System.out.println("6");
 		
 		RelatorioDTO relatorio = new RelatorioDTO(qtdeTotalVendas, valorTotalVendas, 
 				qtdeTotalVendasFechadas, valorTotalVendasFechadas, 
