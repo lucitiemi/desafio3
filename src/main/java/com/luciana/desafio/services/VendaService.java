@@ -1,6 +1,10 @@
 package com.luciana.desafio.services;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.YearMonth;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.luciana.desafio.dto.ConsultaDataDTO;
 import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
+import com.luciana.desafio.dto.RelatorioDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
 import com.luciana.desafio.entities.Pagamento;
@@ -61,9 +66,7 @@ public class VendaService {
 		return list;
 	}
 	
-	
-	
-	
+		
 	// Para criar nova venda
 	public Venda criar(Integer clienteId) {
 		Venda venda = new Venda();
@@ -161,10 +164,81 @@ public class VendaService {
 		return repository.save(venda);
 	}
 
-	
 
-	// Para gerar relatorio:
 	
+	
+	
+	// Para gerar relatorio mensal
+	public RelatorioDTO relatorioMensal(Integer mes, Integer ano) {
+		System.out.println("2");
+		
+		YearMonth mesRelat = YearMonth.of(ano, mes);		
+		
+		LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
+		
+		LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atStartOfDay();
+		System.out.println("3");
+		
+		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
+		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
+		
+		System.out.println("4");
+		
+		RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
+		
+		return dto;
+	}
+
+
+	// Para gerar relatorio semanal
+	public RelatorioDTO relatorioSemanal(Instant dataConsulta) {
+		
+		return null;
+	}
+	
+	
+	// Para gerar relatorio
+	public RelatorioDTO gerarRelatorio(Instant dataInicial, Instant dataFinal) {
+		
+		
+		List<Venda> lista = new ArrayList<>();
+		ConsultaDataDTO dto = new ConsultaDataDTO();
+
+		dto.setDataInicial(dataInicial);
+		dto.setDataFinal(dataFinal);
+		
+		lista = consultaEntreDatas(dto);
+
+		Integer qtdeTotalVendas=0, qtdeTotalVendasFechadas=0, qtdeTotalVendasPendentes=0, qtdeTotalVendasCanceladas=0;
+		Double valorTotalVendas=0.0, valorTotalVendasFechadas=0.0, valorTotalVendasPendentes=0.0, valorTotalVendasCanceladas=0.0;
+		System.out.println("5");
+		
+		for (Venda venda : lista) {
+			 qtdeTotalVendas++;
+			 valorTotalVendas += venda.getTotal();
+			 
+			 if (venda.getStatusVenda() == StatusVenda.FECHADA) {
+				 qtdeTotalVendasFechadas++;
+				 valorTotalVendasFechadas += venda.getTotal();
+			 }
+			 else if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
+				 qtdeTotalVendasPendentes++;
+				 valorTotalVendasPendentes += venda.getTotal();
+			 }
+			 if (venda.getStatusVenda() == StatusVenda.CANCELADA) {
+				 qtdeTotalVendasCanceladas++;
+				 valorTotalVendasCanceladas += venda.getTotal();
+			 }
+		}
+		System.out.println("6");
+		
+		RelatorioDTO relatorio = new RelatorioDTO(qtdeTotalVendas, valorTotalVendas, 
+				qtdeTotalVendasFechadas, valorTotalVendasFechadas, 
+				qtdeTotalVendasPendentes, valorTotalVendasPendentes, 
+				qtdeTotalVendasCanceladas, valorTotalVendasCanceladas);
+		
+		return relatorio;
+	}
 
 	
 	 

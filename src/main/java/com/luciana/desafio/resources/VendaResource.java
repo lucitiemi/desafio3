@@ -1,6 +1,7 @@
 package com.luciana.desafio.resources;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.luciana.desafio.dto.ConsultaDataDTO;
 import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
+import com.luciana.desafio.dto.RelatorioDTO;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.services.VendaService;
 
@@ -118,9 +120,26 @@ public class VendaResource {
 		return ResponseEntity.ok().body(venda);
 	}
 	
+	
+	
 
+	// Para gerar relatorio mensal
+	@GetMapping(value = "/relatorio-mensal/{ano}/{mes}") // pensar qual melhor tipo de dado
+	public ResponseEntity<RelatorioDTO> relatorioMensal(@PathVariable Integer ano, @PathVariable Integer mes) {
+		System.out.println("1");
+		RelatorioDTO dto = service.relatorioMensal(mes, ano);
+		return ResponseEntity.ok().body(dto);
+
+	}
 	
 	
+	// Para gerar relatorio semanal
+	@GetMapping(value = "/relatorio-semanal/{dataConsulta}") // pensar qual melhor tipo de dado
+	public ResponseEntity<RelatorioDTO> relatorioSemanal(@PathVariable Instant dataConsulta) {
+		RelatorioDTO dto = service.relatorioSemanal(dataConsulta);
+		return ResponseEntity.ok().body(dto);
+
+	}
 	
 	
 	
