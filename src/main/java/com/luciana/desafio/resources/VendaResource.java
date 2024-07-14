@@ -118,9 +118,7 @@ public class VendaResource {
 		Venda venda = service.pagar(id);
 		return ResponseEntity.ok().body(venda);
 	}
-	
-	
-	
+		
 
 	// Para gerar relatorio mensal
 	@GetMapping(value = "/relatorio-mensal/{ano}/{mes}") 
@@ -128,7 +126,6 @@ public class VendaResource {
 		System.out.println("1");
 		RelatorioDTO dto = service.relatorioMensal(mes, ano);
 		return ResponseEntity.ok().body(dto);
-
 	}
 	
 	
@@ -137,7 +134,6 @@ public class VendaResource {
 	public ResponseEntity<RelatorioDTO> relatorioSemanal(@PathVariable Integer ano, @PathVariable Integer mes, @PathVariable Integer dia) {
 		RelatorioDTO dto = service.relatorioSemanal(ano, mes, dia);
 		return ResponseEntity.ok().body(dto);
-
 	}
 	
 	

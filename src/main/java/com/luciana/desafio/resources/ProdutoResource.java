@@ -26,22 +26,35 @@ public class ProdutoResource {
 	private ProdutoService service;
 	
 	
-	// Para consultar produto
+	// Para consultar todos os produto
 	@GetMapping
 	public ResponseEntity<List<Produto>> findAll() {
 		 List<Produto> list = service.findAll();
 		 return ResponseEntity.ok().body(list);
 	 }
-
+	
+	
+	// Para consultar produto pelo id
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Produto> find(@PathVariable Integer id) {
-		
 		Produto obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	// Para consultar todos os produto ativos
+	@GetMapping(value = "/ativos")
+	public ResponseEntity<List<Produto>> findProdAtivos() {
+		 List<Produto> list = service.findProdAtivos();
+		 return ResponseEntity.ok().body(list);
+	 }
 	
-	
+	// Para consultar todos os produto inativos
+	@GetMapping(value = "/inativos")
+	public ResponseEntity<List<Produto>> findProdInativos() {
+		 List<Produto> list = service.findProdInativos();
+		 return ResponseEntity.ok().body(list);
+	 }
+
 	// Para inserir produto
 	@PostMapping
 	public ResponseEntity<Produto> inserir(@RequestBody Produto obj) {

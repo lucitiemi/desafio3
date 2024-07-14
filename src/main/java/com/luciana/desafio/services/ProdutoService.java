@@ -21,16 +21,26 @@ public class ProdutoService {
 	private ProdutoRepository repository;
 	
 	
-	// Para consultar produto
+	// Para consultar todos os produto
 	public List<Produto> findAll() {
 		return repository.findAll();
 	}
 	
+	// Para consultar produto pelo id
 	public Produto findById(Integer id) {
 		Optional<Produto> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
 	}
 	
+	// Para consultar todos os produto ativos
+	public List<Produto> findProdAtivos() {
+		return repository.findByStatusProdTrue();
+	}
+
+	// Para consultar todos os produto inativos
+		public List<Produto> findProdInativos() {
+			return repository.findByStatusProdFalse();
+		}
 	
 	
 	// Para inserir produto
