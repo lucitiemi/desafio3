@@ -26,6 +26,7 @@ import com.luciana.desafio.entities.enums.StatusVenda;
 import com.luciana.desafio.entities.pk.ItemVendaPK;
 import com.luciana.desafio.repositories.VendaRepository;
 import com.luciana.desafio.services.exceptions.DatabaseException;
+import com.luciana.desafio.services.exceptions.InsufficientStockException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -88,10 +89,15 @@ public class VendaService {
 		Venda venda = findById(vendaId);
 		Produto produto = produtoService.findById(dto.produtoId());
 		
-		ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
+		if (produto.getEstoque() >= dto.quantidade()) {
+			ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
+			venda.getItens().add(item);
+			return repository.save(venda);
+		}
+		else {
+			throw new InsufficientStockException(dto.produtoId());
+		}
 		
-		venda.getItens().add(item);
-		return repository.save(venda);
 	}
 	
 	

@@ -19,6 +19,8 @@ import com.luciana.desafio.dto.ClienteAtualizacaoDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.services.ClienteService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/clientes")
 public class ClienteResource {
@@ -44,7 +46,7 @@ public class ClienteResource {
 	
 	// Para criar novo cliente
 	@PostMapping
-	public ResponseEntity<Cliente> criar(@RequestBody Cliente obj) {
+	public ResponseEntity<Cliente> criar(@Valid @RequestBody Cliente obj) {
 		obj = service.criar(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
@@ -59,7 +61,7 @@ public class ClienteResource {
 	
 	// Para atualizar um cliente
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Cliente> atualizar(@PathVariable Integer id, @RequestBody ClienteAtualizacaoDTO dto) {
+	public ResponseEntity<Cliente> atualizar(@PathVariable Integer id, @Valid @RequestBody ClienteAtualizacaoDTO dto) {
 		Cliente cliente = service.atualizar(id, dto);
 		return ResponseEntity.ok().body(cliente);
 	}

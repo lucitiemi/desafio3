@@ -13,6 +13,8 @@ import com.luciana.desafio.repositories.ClienteRepository;
 import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ClienteService {
 
@@ -56,9 +58,15 @@ public class ClienteService {
 		
 	// Para atualizar cliente
 	public Cliente atualizar(Integer id, ClienteAtualizacaoDTO dto) {
-		Cliente cliente = repository.getReferenceById(id);
-		atualizarDados(cliente, dto);
-		return repository.save(cliente);
+		try {
+			Cliente cliente = repository.getReferenceById(id);
+			atualizarDados(cliente, dto);
+			return repository.save(cliente);
+		} 
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
 
 	private void atualizarDados(Cliente cliente, ClienteAtualizacaoDTO dto) {

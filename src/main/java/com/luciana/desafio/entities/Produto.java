@@ -12,6 +12,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class Produto implements Serializable  {
@@ -20,9 +23,19 @@ public class Produto implements Serializable  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	@NotBlank(message = "Descricao nao pode ser vazio")
 	private String descricao;
+	
+	@PositiveOrZero(message = "Preco deve ser um numero positivo")
+	@NotNull(message = "Preco nao pode ser nulo")
 	private Double preco;
+	
+	@PositiveOrZero(message = "Estoque deve ser um numero positivo")
+	@NotNull(message = "Estoque nao pode ser nulo")
 	private Integer estoque;
+	
+	@NotNull(message = "Status do Produto nao pode ser nulo")
 	private Boolean statusProd;
 	
 	

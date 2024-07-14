@@ -16,6 +16,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -26,21 +29,23 @@ public class Cliente implements Serializable  {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	//@NotEmpty(message = "Tipo de Cliente nao pode ser vazio")
+	@NotNull(message = "Tipo de Cliente nao pode ser nulo")
 	private TipoCliente tipoCliente;
 	
-	//@NotBlank(message = "Nome nao pode ser vazio")
+	@NotBlank(message = "Nome nao pode ser vazio")
 	private String nome;
 	
-	@CPF
-	//@NotBlank
+	@CPF(message = "O CPF deve ser valido")				// como validar unique?
+	@NotBlank(message = "CPF nao pode ser vazio")
 	private String cpf;
 	
-	@Email
-	//@NotBlank(message = "E-mail nao pode ser vazio")
+	@Email(message = "O e-mail deve ser valido")		// como validar unique?
+	@NotBlank(message = "E-mail nao pode ser vazio")
 	private String email;
 	
-	String senha;
+	@NotNull(message = "Senha nao pode ser nula")
+	@Size(min=6, max=15, message = "Senha precisa ter entre 6 e 15 caracteres")
+	private String senha;
 
 	
 	// associacoes:
@@ -51,10 +56,6 @@ public class Cliente implements Serializable  {
 
 	// construtores:	
 	public Cliente() {}
-
-	
-
-
 
 	public Cliente(Integer id, TipoCliente tipoCliente, String nome, String cpf, String email, String senha) {
 		super();
@@ -112,7 +113,15 @@ public class Cliente implements Serializable  {
 		this.tipoCliente = tipoCliente;
 	}
 	
+	public String getSenha() {
+		return senha;
+	}
 
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+
+	
 	
 	// hashcode e equals
 	@Override

@@ -8,6 +8,8 @@ import com.luciana.desafio.entities.pk.ItemVendaPK;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 public class ItemVenda implements Serializable  {
@@ -16,7 +18,12 @@ public class ItemVenda implements Serializable  {
 	@EmbeddedId
 	private ItemVendaPK id = new ItemVendaPK();
 	
+	@PositiveOrZero(message = "Quantidade deve ser um numero positivo")
+	@NotNull(message = "Quantidade nao pode ser nulo")
 	private Integer quantidade;
+	
+	@PositiveOrZero(message = "Preco deve ser um numero positivo")
+	@NotNull(message = "Preco nao pode ser nulo")
 	private Double preco;
 	
 	

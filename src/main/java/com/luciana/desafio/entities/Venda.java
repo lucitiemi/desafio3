@@ -18,6 +18,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 
 
 
@@ -33,7 +34,7 @@ public class Venda implements Serializable  {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'", timezone = "GMT")
 	private Instant dataVenda;
 	
-	
+	@NotNull(message = "Status da Venda nao pode ser nulo")
 	private StatusVenda statusVenda;
 	
 	

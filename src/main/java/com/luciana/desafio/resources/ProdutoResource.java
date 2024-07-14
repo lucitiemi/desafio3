@@ -18,6 +18,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.services.ProdutoService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping(value = "/produtos")
 public class ProdutoResource {
@@ -57,7 +59,7 @@ public class ProdutoResource {
 
 	// Para inserir produto
 	@PostMapping
-	public ResponseEntity<Produto> inserir(@RequestBody Produto obj) {
+	public ResponseEntity<Produto> inserir(@Valid @RequestBody Produto obj) {
 		obj = service.inserir(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
@@ -74,7 +76,7 @@ public class ProdutoResource {
 	
 	// Para atualizar um produto
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Produto> atualizar(@PathVariable Integer id, @RequestBody Produto obj) {
+	public ResponseEntity<Produto> atualizar(@PathVariable Integer id, @Valid @RequestBody Produto obj) {
 		obj = service.atualizar(id, obj);
 		return ResponseEntity.ok().body(obj);
 	}
