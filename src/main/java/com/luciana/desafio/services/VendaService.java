@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.dto.ConsultaDataDTO;
@@ -24,7 +25,10 @@ import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.enums.StatusVenda;
 import com.luciana.desafio.entities.pk.ItemVendaPK;
 import com.luciana.desafio.repositories.VendaRepository;
+import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class VendaService {
@@ -129,18 +133,32 @@ public class VendaService {
 	
 	// Para deletar venda
 	public void deletar(Integer id) {
-		repository.deleteById(id);
+		try {
+			if (repository.existsById(id)) {
+				repository.deleteById(id);			
+			} else {				
+				throw new ResourceNotFoundException(id);			
+			}		
+		} catch (DataIntegrityViolationException e) {			
+			throw new DatabaseException(e.getMessage());		
+		}	
 	}
 	
 	
 
 	// Para atualizar um venda
 	public Venda atualizar(Integer id, Venda obj) {
-		Venda entity = repository.getReferenceById(id);
-		atualizarDados(entity, obj);
-		return repository.save(entity);		
+		try {
+			Venda entity = repository.getReferenceById(id);
+			atualizarDados(entity, obj);
+			return repository.save(entity);		
+		} 
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
+		
 	}
-
+	
 	private void atualizarDados(Venda entity, Venda obj) {
 		entity.setDataVenda(obj.getDataVenda());
 		entity.setStatusVenda(obj.getStatusVenda());
@@ -164,9 +182,6 @@ public class VendaService {
 		venda.setStatusVenda(StatusVenda.FECHADA);
 		return repository.save(venda);
 	}
-
-
-	
 	
 	
 	// Para gerar relatorio mensal

@@ -5,13 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.hibernate.validator.constraints.br.CPF;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luciana.desafio.entities.enums.TipoCliente;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
 
 
 @Entity
@@ -21,9 +25,22 @@ public class Cliente implements Serializable  {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
+	
+	//@NotEmpty(message = "Tipo de Cliente nao pode ser vazio")
+	private TipoCliente tipoCliente;
+	
+	//@NotBlank(message = "Nome nao pode ser vazio")
 	private String nome;
+	
+	@CPF
+	//@NotBlank
 	private String cpf;
+	
+	@Email
+	//@NotBlank(message = "E-mail nao pode ser vazio")
 	private String email;
+	
+	String senha;
 
 	
 	// associacoes:
@@ -35,12 +52,18 @@ public class Cliente implements Serializable  {
 	// construtores:	
 	public Cliente() {}
 
-	public Cliente(Integer id, String nome, String cpf, String email) {
+	
+
+
+
+	public Cliente(Integer id, TipoCliente tipoCliente, String nome, String cpf, String email, String senha) {
 		super();
 		this.id = id;
+		this.tipoCliente = tipoCliente;
 		this.nome = nome;
 		this.cpf = cpf;
 		this.email = email;
+		this.senha = senha;
 	}
 
 	
@@ -81,6 +104,14 @@ public class Cliente implements Serializable  {
 		return vendas;
 	}
 	
+	public TipoCliente getTipoCliente() {
+		return tipoCliente;
+	}
+
+	public void setTipoCliente(TipoCliente tipoCliente) {
+		this.tipoCliente = tipoCliente;
+	}
+	
 
 	
 	// hashcode e equals
@@ -107,6 +138,8 @@ public class Cliente implements Serializable  {
 	public String toString() {
 		return "Cliente [id=" + id + ", nome=" + nome + "]";
 	}
+
+	
 
 	
 	

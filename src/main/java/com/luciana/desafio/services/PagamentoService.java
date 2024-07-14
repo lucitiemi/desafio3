@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.entities.Pagamento;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.repositories.PagamentoRepository;
+import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -38,6 +40,19 @@ public class PagamentoService {
 		pagamento.setVenda(venda);
 		return repository.save(pagamento);
 	}
+	
+	// Para deletar um pagamento
+		public void deletar(Integer id) {
+			try {
+				if (repository.existsById(id)) {
+					repository.deleteById(id);			
+				} else {				
+					throw new ResourceNotFoundException(id);			
+				}		
+			} catch (DataIntegrityViolationException e) {			
+				throw new DatabaseException(e.getMessage());		
+			}	
+		}
 }
 
 

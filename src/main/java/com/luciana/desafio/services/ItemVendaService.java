@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.entities.ItemVenda;
@@ -11,7 +12,10 @@ import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.pk.ItemVendaPK;
 import com.luciana.desafio.repositories.ItemVendaRepository;
+import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ItemVendaService {
@@ -41,19 +45,34 @@ public class ItemVendaService {
 	}
 	
 	
-	// Para deletar itemVenda
+	// Para deletar itemVenda								so posso deletar se o status estiver pendente
 	public void deletar(ItemVendaPK itemVendaPK) {
-		repository.deleteById(itemVendaPK);
+		try {
+			if (repository.existsById(itemVendaPK)) {
+				repository.deleteById(itemVendaPK);			
+			} else {				
+				throw new ResourceNotFoundException(itemVendaPK);			
+			}		
+		} catch (DataIntegrityViolationException e) {			
+			throw new DatabaseException(e.getMessage());		
+		}	
 	}
 	
 
 	// Para atualizar itemVenda
 	public ItemVenda atualizar(ItemVendaPK itemVendaPK, ItemVenda obj) {
-		ItemVenda entity = repository.getReferenceById(itemVendaPK);
-		atualizarDados(entity, obj);
-		return repository.save(entity);
+		try {
+			ItemVenda entity = repository.getReferenceById(itemVendaPK);
+			atualizarDados(entity, obj);
+			return repository.save(entity);
+		} 
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(itemVendaPK);
+		}
+		
 	}
 	
+		
 	private void atualizarDados(ItemVenda entity, ItemVenda obj) {
 		entity.setQuantidade(obj.getQuantidade());
 		entity.setPrice(obj.getPrice());

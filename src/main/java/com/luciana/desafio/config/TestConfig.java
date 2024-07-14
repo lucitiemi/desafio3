@@ -14,6 +14,7 @@ import com.luciana.desafio.entities.Pagamento;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.enums.StatusVenda;
+import com.luciana.desafio.entities.enums.TipoCliente;
 import com.luciana.desafio.repositories.ClienteRepository;
 import com.luciana.desafio.repositories.ItemVendaRepository;
 import com.luciana.desafio.repositories.ProdutoRepository;
@@ -39,9 +40,9 @@ public class TestConfig implements CommandLineRunner {
 		
 		// inserindo clientes
 		
-		Cliente cl1 = new Cliente(null, "Maria", "333.444.555.666-77", "maria@gmail.com");
-		Cliente cl2 = new Cliente(null, "Alberto", "364.256.789-80", "alberto@gmail.com");
-		Cliente cl3 = new Cliente(null, "Ana Carolina", "326.153.248-60", "anacarolina@gmail.com");
+		Cliente cl1 = new Cliente(null, TipoCliente.ADMIN, "Maria", "520.834.160-31", "maria@gmail.com", "123maria");
+		Cliente cl2 = new Cliente(null, TipoCliente.USUARIO, "Alberto", "268.647.710-59", "alberto@gmail.com", "alberto456");
+		Cliente cl3 = new Cliente(null, TipoCliente.USUARIO, "Ana Carolina", "572.761.830-41", "anacarolina@gmail.com", "ana789carol");
 		
 		clienteRepository.saveAll(Arrays.asList(cl1, cl2, cl3));
 		

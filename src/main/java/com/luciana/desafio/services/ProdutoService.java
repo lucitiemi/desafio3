@@ -64,9 +64,7 @@ public class ProdutoService {
 		}		
 	}
 	
-	
-	
-	
+		
 	// Para atualizar produto
 	public Produto atualizar(Integer id, Produto obj) {
 		try {

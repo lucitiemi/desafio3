@@ -63,7 +63,7 @@ public class ProdutoResource {
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-		
+
 	// Para deletar produto
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Integer id) {
