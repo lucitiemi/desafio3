@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.luciana.desafio.services.exceptions.CanceledOrderException;
 import com.luciana.desafio.services.exceptions.DatabaseException;
+import com.luciana.desafio.services.exceptions.EmptyOrderException;
 import com.luciana.desafio.services.exceptions.InsufficientStockException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
+import com.luciana.desafio.services.exceptions.UnavailableOrderException;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
@@ -25,7 +28,7 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(ResourceNotFoundException.class)				
 	public ResponseEntity<StandardError> resourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
-		String error = "Recurso nao encontrado";
+		String error = "Not Found";
 		HttpStatus status = HttpStatus.NOT_FOUND;
 		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(erro);
@@ -34,7 +37,7 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(DatabaseException.class)				
 	public ResponseEntity<StandardError> database(DatabaseException e, HttpServletRequest request) {
-		String error = "Erro de Banco de Dado";
+		String error = "Bad Request - Erro de Banco de Dado";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(erro);
@@ -43,7 +46,7 @@ public class ResourceExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MethodArgumentNotValidException.class)				
 	public ResponseEntity<StandardError> methodArgumentNotValid(MethodArgumentNotValidException e, HttpServletRequest request) {
-		String error = "Erro de validacao de dados";
+		String error = "Bad Request - Erro de validacao de dados";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String msg = "";
 		for(ObjectError er: e.getBindingResult().getAllErrors()) {
@@ -56,7 +59,7 @@ public class ResourceExceptionHandler {
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(ConstraintViolationException.class)				
 	public ResponseEntity<StandardError> constraintViolation(ConstraintViolationException e, HttpServletRequest request) {
-		String error = "Erro de validacao de dados";
+		String error = "Bad Request - Erro de validacao de dados";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		String msg = e.getConstraintViolations().stream()
              .map(ConstraintViolation::getMessage)
@@ -67,7 +70,31 @@ public class ResourceExceptionHandler {
 	
 	@ExceptionHandler(InsufficientStockException.class)				
 	public ResponseEntity<StandardError> insufficientStock(InsufficientStockException e, HttpServletRequest request) {
-		String error = "Estoque insuficiente";
+		String error = "Bad Request";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+	
+	@ExceptionHandler(EmptyOrderException.class)				
+	public ResponseEntity<StandardError> emptySale(EmptyOrderException e, HttpServletRequest request) {
+		String error = "Bad Request";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+	
+	@ExceptionHandler(UnavailableOrderException.class)				
+	public ResponseEntity<StandardError> unavailableOrder(UnavailableOrderException e, HttpServletRequest request) {
+		String error = "Bad Request";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+	
+	@ExceptionHandler(CanceledOrderException.class)				
+	public ResponseEntity<StandardError> canceledOrder(CanceledOrderException e, HttpServletRequest request) {
+		String error = "Bad Request";
 		HttpStatus status = HttpStatus.BAD_REQUEST;
 		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(erro);

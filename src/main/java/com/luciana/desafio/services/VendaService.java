@@ -25,9 +25,12 @@ import com.luciana.desafio.entities.Venda;
 import com.luciana.desafio.entities.enums.StatusVenda;
 import com.luciana.desafio.entities.pk.ItemVendaPK;
 import com.luciana.desafio.repositories.VendaRepository;
+import com.luciana.desafio.services.exceptions.CanceledOrderException;
 import com.luciana.desafio.services.exceptions.DatabaseException;
+import com.luciana.desafio.services.exceptions.EmptyOrderException;
 import com.luciana.desafio.services.exceptions.InsufficientStockException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
+import com.luciana.desafio.services.exceptions.UnavailableOrderException;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -84,74 +87,89 @@ public class VendaService {
 	}
 	
 	
-	// Para inserir item na venda
+	// Para inserir item na venda							// so pode deletar se o status estiver PENDENTE
 	public Venda inserirItem(Integer vendaId, ItemVendaDTO dto) {
 		Venda venda = findById(vendaId);
-		Produto produto = produtoService.findById(dto.produtoId());
-		
-		if (produto.getEstoque() >= dto.quantidade()) {
-			ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
-			venda.getItens().add(item);
-			produtoService.diminuirEstoque(dto.produtoId(), dto.quantidade());
-			return repository.save(venda);
-		}
-		else {
-			throw new InsufficientStockException(dto.produtoId());
-		}
-		
-	}
-	
-	
-	// Para retirar item na venda							// so pode deletar se o status estiver PENDENTE!
-	public Venda retirarItemVenda(Integer vendaId, Integer produtoId) {
-		Venda venda = findById(vendaId);
-		Produto produto = produtoService.findById(produtoId);
-		
-		ItemVendaPK itemVendaPK = new ItemVendaPK();
-        itemVendaPK.setVenda(venda);
-        itemVendaPK.setProduto(produto); 
-        
-        ItemVenda item = itemVendaService.findById(itemVendaPK);
-               
-        produtoService.aumentarEstoque(produtoId, item.getQuantidade());
-        itemVendaService.deletar(itemVendaPK);
-        
-		return repository.save(venda);	
-	}
-	
-	 
-	// Para atualizar quantidade itemVenda						// so pode atualizar se o status estiver PENDENTE!
-	public Venda atualizarItemVenda(Integer vendaId, ItemVendaDTO dto) {
-		Venda venda = findById(vendaId);														// acha a venda
-		Produto produto = produtoService.findById(dto.produtoId());								// acha o produto
-		
-		ItemVendaPK itemVendaPK = new ItemVendaPK();
-        itemVendaPK.setVenda(venda);
-        itemVendaPK.setProduto(produto);														// acha o id do item
-                
-        ItemVenda itemVenda = itemVendaService.findById(itemVendaPK);							// acha o item original
-        
-        ItemVenda novoitemVenda = new ItemVenda();    											// cria o novo item
-        novoitemVenda.setQuantidade(dto.quantidade());
-        novoitemVenda.setPrice(itemVenda.getPrice());
-                
-		if (dto.quantidade() > itemVenda.getQuantidade()) {										// se a nova quantidade foi maior que a qtde original
-			if (produto.getEstoque() >= dto.quantidade()) {										// checa se tem estoque
-						     
-				produtoService.diminuirEstoque(dto.produtoId(), (dto.quantidade() - itemVenda.getQuantidade()));
-		        itemVendaService.atualizar(itemVendaPK, novoitemVenda);
-		        
-				return repository.save(venda);	
+		if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
+			Produto produto = produtoService.findById(dto.produtoId());
+			
+			if (produto.getEstoque() >= dto.quantidade()) {
+				ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
+				venda.getItens().add(item);
+				produtoService.diminuirEstoque(dto.produtoId(), dto.quantidade());
+				return repository.save(venda);
 			}
 			else {
 				throw new InsufficientStockException(dto.produtoId());
 			}
 		}
 		else {
-			produtoService.aumentarEstoque(dto.produtoId(), (itemVenda.getQuantidade() - dto.quantidade()));
-			itemVendaService.atualizar(itemVendaPK, novoitemVenda);
-		       		        
-			return repository.save(venda);	
+			throw new UnavailableOrderException(vendaId);
+		}
+	}
+	
+	
+	// Para retirar item na venda							// so pode deletar se o status estiver PENDENTE
+	public Venda retirarItemVenda(Integer vendaId, Integer produtoId) {
+		Venda venda = findById(vendaId);
+		if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
+			Produto produto = produtoService.findById(produtoId);
+			
+			ItemVendaPK itemVendaPK = new ItemVendaPK();
+	        itemVendaPK.setVenda(venda);
+	        itemVendaPK.setProduto(produto); 
+	        
+	        ItemVenda item = itemVendaService.findById(itemVendaPK);
+	               
+	        produtoService.aumentarEstoque(produtoId, item.getQuantidade());
+	        itemVendaService.deletar(itemVendaPK);
+	        
+			return repository.save(venda);
+		}
+		else {
+			throw new UnavailableOrderException(vendaId);
+		}
+	}
+	
+	 
+	// Para atualizar quantidade itemVenda						// so pode atualizar se o status estiver PENDENTE
+	public Venda atualizarItemVenda(Integer vendaId, ItemVendaDTO dto) {
+		Venda venda = findById(vendaId);															// acha a venda
+		
+		if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
+			Produto produto = produtoService.findById(dto.produtoId());								// acha o produto
+			
+			ItemVendaPK itemVendaPK = new ItemVendaPK();
+	        itemVendaPK.setVenda(venda);
+	        itemVendaPK.setProduto(produto);														// acha o id do item
+	                
+	        ItemVenda itemVenda = itemVendaService.findById(itemVendaPK);							// acha o item original
+	        
+	        ItemVenda novoitemVenda = new ItemVenda();    											// cria o novo item
+	        novoitemVenda.setQuantidade(dto.quantidade());
+	        novoitemVenda.setPrice(itemVenda.getPrice());
+	                
+			if (dto.quantidade() > itemVenda.getQuantidade()) {										// se a nova quantidade foi maior que a qtde original
+				if (produto.getEstoque() >= dto.quantidade()) {										// checa se tem estoque
+							     
+					produtoService.diminuirEstoque(dto.produtoId(), (dto.quantidade() - itemVenda.getQuantidade()));
+			        itemVendaService.atualizar(itemVendaPK, novoitemVenda);
+			        
+					return repository.save(venda);	
+				}
+				else {
+					throw new InsufficientStockException(dto.produtoId());
+				}
+			}
+			else {
+				produtoService.aumentarEstoque(dto.produtoId(), (itemVenda.getQuantidade() - dto.quantidade()));
+				itemVendaService.atualizar(itemVendaPK, novoitemVenda);
+			       		        
+				return repository.save(venda);	
+			}
+		}
+		else {
+			throw new UnavailableOrderException(vendaId);
 		}
 	}
 		
@@ -193,25 +211,42 @@ public class VendaService {
 	// Para cancelar venda							
 	public Venda cancelarVenda(Integer id) {
 		Venda entity = repository.getReferenceById(id);
-		entity.setStatusVenda(StatusVenda.CANCELADA);
 		
-		Set<ItemVenda> itens = entity.getItens();				// para voltar o estoque dos produtos
-		for(ItemVenda item : itens) {
-			produtoService.aumentarEstoque(item.getProduto().getId(), item.getQuantidade());
-		}	
-		
-		return repository.save(entity);		
+		if (entity.getStatusVenda() != StatusVenda.CANCELADA) {
+			entity.setStatusVenda(StatusVenda.CANCELADA);
+			
+			Set<ItemVenda> itens = entity.getItens();				// para voltar o estoque dos produtos
+			for(ItemVenda item : itens) {
+				produtoService.aumentarEstoque(item.getProduto().getId(), item.getQuantidade());
+			}	
+			
+			return repository.save(entity);	
+		}
+		else {
+			throw new CanceledOrderException(id);
+		}
 	}
 	
 	
 	// Para gerar pagamento da venda
 	public Venda pagar(Integer vendaId) {
 		Venda venda = repository.getReferenceById(vendaId);
-		Instant dataPgto = Instant.now();
-		Pagamento pagamento = pagamentoService.criar(venda, dataPgto);
-		venda.setPagamento(pagamento);
-		venda.setStatusVenda(StatusVenda.FECHADA);
-		return repository.save(venda);
+		
+		if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
+			if (venda.getItens().size() > 0) {
+				Instant dataPgto = Instant.now();
+				Pagamento pagamento = pagamentoService.criar(venda, dataPgto);
+				venda.setPagamento(pagamento);
+				venda.setStatusVenda(StatusVenda.FECHADA);
+				return repository.save(venda);
+			}
+			else {
+				throw new EmptyOrderException(vendaId);
+			}
+		}
+		else {
+			throw new UnavailableOrderException(vendaId);
+		}
 	}
 	
 	
