@@ -51,8 +51,8 @@ public class TestConfig implements CommandLineRunner {
 		
 		Venda v1 = new Venda(null, Instant.parse("2024-02-10T19:53:00Z"), StatusVenda.PENDENTE, cl1);
 		Venda v2 = new Venda(null, Instant.parse("2024-03-18T10:14:00Z"), StatusVenda.FECHADA, cl2);
-		Venda v3 = new Venda(null, Instant.parse("2024-03-20T22:37:00Z"), StatusVenda.FECHADA, cl2);
-		Venda v4 = new Venda(null, Instant.parse("2024-05-01T18:00:00Z"), StatusVenda.FECHADA, cl3);
+		Venda v3 = new Venda(null, Instant.parse("2024-03-20T22:37:00Z"), StatusVenda.CANCELADA, cl2);
+		Venda v4 = new Venda(null, Instant.parse("2024-03-01T18:00:00Z"), StatusVenda.PENDENTE, cl3);
 		
 		vendaRepository.saveAll(Arrays.asList(v1, v2, v3, v4));
 		
@@ -61,9 +61,9 @@ public class TestConfig implements CommandLineRunner {
 		
 		Produto p1 = new Produto(null, "Notebook", 3000.00, 30, true);
 		Produto p2 = new Produto(null, "Mouse", 90.00, 240, true);
-		Produto p3 = new Produto(null, "Fone sem fio", 250.00, 12, true);
+		Produto p3 = new Produto(null, "Fone sem fio", 250.00, 10, true);
 		Produto p4 = new Produto(null, "Mousepad", 60.00, 0, false);
-		Produto p5 = new Produto(null, "Monitor", 800.00, 24, true);
+		Produto p5 = new Produto(null, "Monitor", 800.00, 20, true);
 		
 		produtoRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 		
@@ -84,10 +84,8 @@ public class TestConfig implements CommandLineRunner {
 		
 		Pagamento pg1 = new Pagamento(null, Instant.parse("2024-03-15T11:00:00Z"), v2);
 		Pagamento pg2 = new Pagamento(null, Instant.parse("2024-03-22T08:15:00Z"), v3);
-		Pagamento pg3 = new Pagamento(null, Instant.parse("2024-05-01T22:58:00Z"), v4);
 		v2.setPagamento(pg1);
 		v3.setPagamento(pg2);
-		v4.setPagamento(pg3);
 		
 		vendaRepository.saveAll(Arrays.asList(v2, v3, v4));
 		

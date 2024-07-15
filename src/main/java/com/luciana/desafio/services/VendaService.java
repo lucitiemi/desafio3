@@ -256,7 +256,7 @@ public class VendaService {
 		YearMonth mesRelat = YearMonth.of(ano, mes);		
 		
 		LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
-		LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atStartOfDay();
+		LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atTime(23, 59, 59);
 		
 		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
 		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
@@ -274,8 +274,15 @@ public class VendaService {
 		
 		DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
 		
-		LocalDateTime dataInicialLocal = dataConsulta.minusDays(diaDaSemana.getValue() - (diaDaSemana.getValue()-1));
-		LocalDateTime dataFinalLocal = dataInicialLocal.plusDays(6);
+		System.out.println(diaDaSemana);
+		
+		LocalDateTime dataInicialLocal = dataConsulta.minusDays(diaDaSemana.getValue()-1);
+		LocalDateTime dataFinalLocal = dataInicialLocal.plusDays(7).minusSeconds(1);
+		
+		System.out.println(diaDaSemana.getValue());
+		
+		System.out.println(dataInicialLocal);
+		System.out.println(dataFinalLocal);
 		
 		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
 		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
@@ -318,7 +325,9 @@ public class VendaService {
 			 }
 		}
 		
-		RelatorioDTO relatorio = new RelatorioDTO(qtdeTotalVendas, valorTotalVendas, 
+		RelatorioDTO relatorio = new RelatorioDTO(
+				dataInicial, dataFinal,
+				qtdeTotalVendas, valorTotalVendas, 
 				qtdeTotalVendasFechadas, valorTotalVendasFechadas, 
 				qtdeTotalVendasPendentes, valorTotalVendasPendentes, 
 				qtdeTotalVendasCanceladas, valorTotalVendasCanceladas);
