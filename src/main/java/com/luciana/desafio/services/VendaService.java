@@ -8,13 +8,13 @@ import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.dto.ConsultaDataDTO;
-import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
 import com.luciana.desafio.dto.RelatorioDTO;
 import com.luciana.desafio.entities.Cliente;
@@ -92,6 +92,7 @@ public class VendaService {
 		if (produto.getEstoque() >= dto.quantidade()) {
 			ItemVenda item = itemVendaService.inserir(venda, produto, dto.quantidade());
 			venda.getItens().add(item);
+			produtoService.diminuirEstoque(dto.produtoId(), dto.quantidade());
 			return repository.save(venda);
 		}
 		else {
@@ -101,39 +102,57 @@ public class VendaService {
 	}
 	
 	
-	// Para retirar item na venda											// so pode deletar se o status estiver PENDENTE!
+	// Para retirar item na venda							// so pode deletar se o status estiver PENDENTE!
 	public Venda retirarItemVenda(Integer vendaId, Integer produtoId) {
-		
 		Venda venda = findById(vendaId);
 		Produto produto = produtoService.findById(produtoId);
 		
 		ItemVendaPK itemVendaPK = new ItemVendaPK();
         itemVendaPK.setVenda(venda);
         itemVendaPK.setProduto(produto); 
+        
+        ItemVenda item = itemVendaService.findById(itemVendaPK);
                
+        produtoService.aumentarEstoque(produtoId, item.getQuantidade());
         itemVendaService.deletar(itemVendaPK);
         
 		return repository.save(venda);	
-
 	}
 	
 	 
-	// Para atualizar itemVenda												// so pode deletar se o status estiver PENDENTE!
-	public Venda atualizarItemVenda(Integer vendaId, Integer produtoId, ItemVendaAtualizarDTO dto) {
-		Venda venda = findById(vendaId);
-		Produto produto = produtoService.findById(produtoId);
+	// Para atualizar quantidade itemVenda						// so pode atualizar se o status estiver PENDENTE!
+	public Venda atualizarItemVenda(Integer vendaId, ItemVendaDTO dto) {
+		Venda venda = findById(vendaId);														// acha a venda
+		Produto produto = produtoService.findById(dto.produtoId());								// acha o produto
 		
 		ItemVendaPK itemVendaPK = new ItemVendaPK();
         itemVendaPK.setVenda(venda);
-        itemVendaPK.setProduto(produto); 
-               
-        ItemVenda itemVenda = new ItemVenda();
-        itemVenda.setQuantidade(dto.quantidade());
-        itemVenda.setPrice(dto.price());
+        itemVendaPK.setProduto(produto);														// acha o id do item
+                
+        ItemVenda itemVenda = itemVendaService.findById(itemVendaPK);							// acha o item original
         
-        itemVendaService.atualizar(itemVendaPK, itemVenda);
-        
-		return repository.save(venda);	
+        ItemVenda novoitemVenda = new ItemVenda();    											// cria o novo item
+        novoitemVenda.setQuantidade(dto.quantidade());
+        novoitemVenda.setPrice(itemVenda.getPrice());
+                
+		if (dto.quantidade() > itemVenda.getQuantidade()) {										// se a nova quantidade foi maior que a qtde original
+			if (produto.getEstoque() >= dto.quantidade()) {										// checa se tem estoque
+						     
+				produtoService.diminuirEstoque(dto.produtoId(), (dto.quantidade() - itemVenda.getQuantidade()));
+		        itemVendaService.atualizar(itemVendaPK, novoitemVenda);
+		        
+				return repository.save(venda);	
+			}
+			else {
+				throw new InsufficientStockException(dto.produtoId());
+			}
+		}
+		else {
+			produtoService.aumentarEstoque(dto.produtoId(), (itemVenda.getQuantidade() - dto.quantidade()));
+			itemVendaService.atualizar(itemVendaPK, novoitemVenda);
+		       		        
+			return repository.save(venda);	
+		}
 	}
 		
 	
@@ -171,10 +190,16 @@ public class VendaService {
 	}
 	
 	
-	// Para cancelar venda
+	// Para cancelar venda							
 	public Venda cancelarVenda(Integer id) {
 		Venda entity = repository.getReferenceById(id);
 		entity.setStatusVenda(StatusVenda.CANCELADA);
+		
+		Set<ItemVenda> itens = entity.getItens();				// para voltar o estoque dos produtos
+		for(ItemVenda item : itens) {
+			produtoService.aumentarEstoque(item.getProduto().getId(), item.getQuantidade());
+		}	
+		
 		return repository.save(entity);		
 	}
 	

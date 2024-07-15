@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.luciana.desafio.entities.Produto;
 import com.luciana.desafio.repositories.ProdutoRepository;
 import com.luciana.desafio.services.exceptions.DatabaseException;
+import com.luciana.desafio.services.exceptions.InsufficientStockException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -97,5 +98,41 @@ public class ProdutoService {
 		}
 	}
 	
+	
+	// Para diminuir estoque
+	public Produto diminuirEstoque(Integer id, Integer qtde) {
+		try {
+			Produto entity = repository.getReferenceById(id);
+			if (entity.getEstoque() >= qtde) {
+				entity.setEstoque(entity.getEstoque() - qtde);
+				return repository.save(entity);	
+			}
+			else {
+				throw new InsufficientStockException(id);
+			}
+			
+		}
+		catch (EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);	
+		}
+	}
+	
+	// Para aumentar estoque
+		public Produto aumentarEstoque(Integer id, Integer qtde) {
+			try {
+				System.out.println("2");
+				Produto entity = repository.getReferenceById(id);
+				System.out.println("estoque=" + entity.getEstoque());
+				System.out.println("qtde=" + qtde);
+				entity.setEstoque(entity.getEstoque() + qtde);
+				System.out.println("estoque=" + entity.getEstoque());
+				System.out.println("qtde=" + qtde);
+				return repository.save(entity);	
+			}
+			catch (EntityNotFoundException e) {
+				throw new ResourceNotFoundException(id);	
+			}
+		}
 
+	
 }

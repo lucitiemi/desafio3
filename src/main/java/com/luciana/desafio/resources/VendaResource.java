@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.luciana.desafio.dto.ConsultaDataDTO;
-import com.luciana.desafio.dto.ItemVendaAtualizarDTO;
 import com.luciana.desafio.dto.ItemVendaDTO;
 import com.luciana.desafio.dto.RelatorioDTO;
 import com.luciana.desafio.entities.Venda;
@@ -56,7 +55,7 @@ public class VendaResource {
 	 }
 	
 		
-	// Para criar nova venda
+	// Para criar nova venda					url -> /vendas/criar-venda?cliente-id=2
 	@PostMapping(value = "/criar-venda")
 	public ResponseEntity<Venda> criar(@RequestParam (value = "cliente-id") Integer clienteId) {
 		Venda venda = service.criar(clienteId);
@@ -79,10 +78,10 @@ public class VendaResource {
     }
 	
 	
-	// Para atualizar itemVenda	
-	@PutMapping(value = "/{vendaId}/atualizar-item/{produtoId}")
-	public ResponseEntity<Venda> atualizar(@PathVariable Integer vendaId, @PathVariable Integer produtoId, @RequestBody ItemVendaAtualizarDTO obj) {
-		Venda venda = service.atualizarItemVenda(vendaId, produtoId, obj);
+	// Para atualizar quantidade itemVenda				
+	@PutMapping(value = "/{vendaId}/atualizar-qtde-item")
+	public ResponseEntity<Venda> atualizarQtde(@PathVariable Integer vendaId, @RequestBody ItemVendaDTO dto) {
+		Venda venda = service.atualizarItemVenda(vendaId, dto);
 		return ResponseEntity.ok().body(venda);
 	}
 	

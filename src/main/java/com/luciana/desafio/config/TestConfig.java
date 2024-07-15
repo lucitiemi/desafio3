@@ -71,7 +71,7 @@ public class TestConfig implements CommandLineRunner {
 		// inserindo itens
 		
 		ItemVenda it1 = new ItemVenda(v1, p1, 1, p1.getPreco());
-		ItemVenda it2 = new ItemVenda(v1, p2, 1, p2.getPreco());
+		ItemVenda it2 = new ItemVenda(v1, p2, 4, p2.getPreco());
 		ItemVenda it3 = new ItemVenda(v2, p2, 2, p2.getPreco());
 		ItemVenda it4 = new ItemVenda(v2, p5, 1, p5.getPreco());
 		ItemVenda it5 = new ItemVenda(v3, p3, 1, p3.getPreco());
