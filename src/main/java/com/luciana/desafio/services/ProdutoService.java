@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@CacheConfig(cacheNames = "produtos")
 public class ProdutoService {
 
 	@Autowired
@@ -23,6 +27,7 @@ public class ProdutoService {
 	
 	
 	// Para consultar todos os produto
+	@Cacheable(key="#root.methodName")
 	public List<Produto> findAll() {
 		return repository.findAll();
 	}
@@ -34,6 +39,7 @@ public class ProdutoService {
 	}
 	
 	// Para consultar todos os produto ativos
+	@Cacheable(key="#root.methodName")
 	public List<Produto> findProdAtivos() {
 		return repository.findByStatusProdTrue();
 	}
@@ -45,6 +51,7 @@ public class ProdutoService {
 	
 	
 	// Para inserir produto
+	@CacheEvict(allEntries = true)
 	public Produto inserir(Produto obj) {
 		return repository.save(obj);
 	}
@@ -52,6 +59,7 @@ public class ProdutoService {
 	
 	
 	// Para deletar produto 
+	@CacheEvict(allEntries = true)
 	public void deletar(Integer id) {
 		
 		try {
@@ -67,6 +75,7 @@ public class ProdutoService {
 	
 		
 	// Para atualizar produto
+	@CacheEvict(allEntries = true)
 	public Produto atualizar(Integer id, Produto obj) {
 		try {
 			Produto entity = repository.getReferenceById(id);
@@ -87,6 +96,7 @@ public class ProdutoService {
 	
 	
 	// Para inativar produto
+	@CacheEvict(allEntries = true)
 	public Produto inativarProduto(Integer id) {
 		try {
 			Produto entity = repository.getReferenceById(id);
@@ -100,6 +110,7 @@ public class ProdutoService {
 	
 	
 	// Para diminuir estoque
+	@CacheEvict(allEntries = true)
 	public Produto diminuirEstoque(Integer id, Integer qtde) {
 		try {
 			Produto entity = repository.getReferenceById(id);
@@ -118,6 +129,7 @@ public class ProdutoService {
 	}
 	
 	// Para aumentar estoque
+	@CacheEvict(allEntries = true)
 		public Produto aumentarEstoque(Integer id, Integer qtde) {
 			try {
 				System.out.println("2");

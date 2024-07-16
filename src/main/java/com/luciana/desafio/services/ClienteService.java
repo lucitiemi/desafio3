@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +19,7 @@ import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@CacheConfig(cacheNames = "clientes")
 public class ClienteService {
 
 	@Autowired
@@ -23,6 +27,7 @@ public class ClienteService {
 	
 	
 	// Para consultar todos os clientes
+	@Cacheable(key="#root.methodName")
 	public List<Cliente> findAll() {
 		return repository.findAll();	
 	}
@@ -36,27 +41,30 @@ public class ClienteService {
 
 	
 	// Para criar novo cliente
+	@CacheEvict(allEntries = true)
 	public Cliente criar(Cliente obj) {
 		return repository.save(obj);
 	}
 	
 	
 	// Para deletar cliente 
-		public void deletar(Integer id) {
-			
-			try {
-				if (repository.existsById(id)) {
-					repository.deleteById(id);			
-				} else {				
-					throw new ResourceNotFoundException(id);			
-				}		
-			} catch (DataIntegrityViolationException e) {			
-				throw new DatabaseException(e.getMessage());		
+	@CacheEvict(allEntries = true)
+	public void deletar(Integer id) {
+		
+		try {
+			if (repository.existsById(id)) {
+				repository.deleteById(id);			
+			} else {				
+				throw new ResourceNotFoundException(id);			
 			}		
-		}
+		} catch (DataIntegrityViolationException e) {			
+			throw new DatabaseException(e.getMessage());		
+		}		
+	}
 
 		
 	// Para atualizar cliente
+	@CacheEvict(allEntries = true)
 	public Cliente atualizar(Integer id, ClienteAtualizacaoDTO dto) {
 		try {
 			Cliente cliente = repository.getReferenceById(id);

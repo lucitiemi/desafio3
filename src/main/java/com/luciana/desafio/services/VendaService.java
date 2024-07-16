@@ -11,6 +11,9 @@ import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +38,7 @@ import com.luciana.desafio.services.exceptions.UnavailableOrderException;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
+@CacheConfig(cacheNames = "vendas")
 public class VendaService {
 
 	@Autowired
@@ -54,6 +58,7 @@ public class VendaService {
 	
 	
 	// Para consultar todas as vendas
+	@Cacheable(key="#root.methodName")
 	public List<Venda> findAll() {
 		return repository.findAll();
 	}
@@ -77,6 +82,7 @@ public class VendaService {
 	
 		
 	// Para criar nova venda
+	@CacheEvict(allEntries = true)
 	public Venda criar(Integer clienteId) {
 		Venda venda = new Venda();
 		Instant dataPgto = Instant.now();
@@ -87,7 +93,8 @@ public class VendaService {
 	}
 	
 	
-	// Para inserir item na venda							// so pode deletar se o status estiver PENDENTE
+	// Para inserir item na venda
+	@CacheEvict(allEntries = true)
 	public Venda inserirItem(Integer vendaId, ItemVendaDTO dto) {
 		Venda venda = findById(vendaId);
 		if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
@@ -109,7 +116,8 @@ public class VendaService {
 	}
 	
 	
-	// Para retirar item na venda							// so pode deletar se o status estiver PENDENTE
+	// Para retirar item na venda		
+	@CacheEvict(allEntries = true)
 	public Venda retirarItemVenda(Integer vendaId, Integer produtoId) {
 		Venda venda = findById(vendaId);
 		if (venda.getStatusVenda() == StatusVenda.PENDENTE) {
@@ -132,7 +140,8 @@ public class VendaService {
 	}
 	
 	 
-	// Para atualizar quantidade itemVenda						// so pode atualizar se o status estiver PENDENTE
+	// Para atualizar quantidade itemVenda
+	@CacheEvict(allEntries = true)
 	public Venda atualizarItemVenda(Integer vendaId, ItemVendaDTO dto) {
 		Venda venda = findById(vendaId);															// acha a venda
 		
@@ -175,6 +184,7 @@ public class VendaService {
 		
 	
 	// Para deletar venda
+	@CacheEvict(allEntries = true)
 	public void deletar(Integer id) {
 		try {
 			if (repository.existsById(id)) {
@@ -190,6 +200,7 @@ public class VendaService {
 	
 
 	// Para atualizar um venda
+	@CacheEvict(allEntries = true)
 	public Venda atualizar(Integer id, Venda obj) {
 		try {
 			Venda entity = repository.getReferenceById(id);
@@ -208,7 +219,8 @@ public class VendaService {
 	}
 	
 	
-	// Para cancelar venda							
+	// Para cancelar venda
+	@CacheEvict(allEntries = true)
 	public Venda cancelarVenda(Integer id) {
 		Venda entity = repository.getReferenceById(id);
 		
@@ -229,6 +241,7 @@ public class VendaService {
 	
 	
 	// Para gerar pagamento da venda
+	@CacheEvict(allEntries = true)
 	public Venda pagar(Integer vendaId) {
 		Venda venda = repository.getReferenceById(vendaId);
 		
