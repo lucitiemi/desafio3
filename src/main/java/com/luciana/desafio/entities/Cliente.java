@@ -2,10 +2,14 @@ package com.luciana.desafio.entities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luciana.desafio.entities.enums.TipoCliente;
@@ -22,24 +26,24 @@ import jakarta.validation.constraints.Size;
 
 
 @Entity
-public class Cliente implements Serializable  {
+public class Cliente implements Serializable, UserDetails {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
-	@NotNull(message = "Tipo de Cliente nao pode ser nulo")
-	private TipoCliente tipoCliente;
-	
+	@NotNull(message = "Tipo de Cliente nao pode ser nulo")		
+	private TipoCliente tipoCliente;							// role
+		
 	@NotBlank(message = "Nome nao pode ser vazio")
 	private String nome;
 	
-	@CPF(message = "O CPF deve ser valido")				// como validar unique?
+	@CPF(message = "O CPF deve ser valido")				
 	@NotBlank(message = "CPF nao pode ser vazio")
 	private String cpf;
 	
-	@Email(message = "O e-mail deve ser valido")		// como validar unique?
+	@Email(message = "O e-mail deve ser valido")		
 	@NotBlank(message = "E-mail nao pode ser vazio")
 	private String email;
 	
@@ -142,15 +146,29 @@ public class Cliente implements Serializable  {
 	}
 
 	
-	// to String
+
 	@Override
-	public String toString() {
-		return "Cliente [id=" + id + ", nome=" + nome + "]";
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		if (this.tipoCliente == TipoCliente.ADMIN) {
+			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+		}
+		else {
+			return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+		}
+		
 	}
 
-	
+	@Override
+	public String getPassword() {						// ???
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-	
+	@Override
+	public String getUsername() {
+		return email;
+	}
+
 	
 	
 	

@@ -2,19 +2,20 @@ package com.luciana.desafio.entities.enums;
 
 public enum TipoCliente {
 	
-	ADMIN(0),
-	USUARIO(1);
+	ADMIN("admin"),
+	USUARIO("user");
 	
-	private int code;
+	private String role;
 	
-	private TipoCliente(int code) {
-		this.code = code;
+	private TipoCliente(String role) {
+		this.role = role;
 	}
 	
-	public int getCode() {
-		return code;
+	public String getRole() {
+		return role;
 	}
 
+	/*
 	public static TipoCliente valueOf(int code) {
 		for (TipoCliente value :  TipoCliente.values()) {
 			if (value.getCode() == code) {
@@ -23,4 +24,5 @@ public enum TipoCliente {
 		}
 		throw new IllegalArgumentException("Codigo de Tipo de Cliente Invalido");
 	}
+	*/
 }

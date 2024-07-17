@@ -287,15 +287,8 @@ public class VendaService {
 		
 		DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
 		
-		System.out.println(diaDaSemana);
-		
 		LocalDateTime dataInicialLocal = dataConsulta.minusDays(diaDaSemana.getValue()-1);
 		LocalDateTime dataFinalLocal = dataInicialLocal.plusDays(7).minusSeconds(1);
-		
-		System.out.println(diaDaSemana.getValue());
-		
-		System.out.println(dataInicialLocal);
-		System.out.println(dataFinalLocal);
 		
 		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
 		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
