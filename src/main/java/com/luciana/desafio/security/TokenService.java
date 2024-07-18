@@ -20,14 +20,15 @@ public class TokenService {
 	private String secret;
 	
 	
-	
-	public String generateToken(Cliente cliente) {
+	// Para gerar o token
+	public String generateToken(Cliente cliente) {		
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
 			String token = JWT.create()
 					.withIssuer("auth-api")
 					.withSubject(cliente.getEmail())
-					.withExpiresAt(genExpirationDate())
+					.withIssuedAt(Instant.now())
+					.withExpiresAt(this.genExpirationDate())
 					.sign(algorithm);
 			return token;
 		} 
@@ -37,21 +38,22 @@ public class TokenService {
 	}
 	
 	
+	// Para validar o token
 	public String validateToken(String token) {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
-			return JWT.require(algorithm)
+			return JWT.require(algorithm)		
 					.withIssuer("auth-api")
-					.build()
-					.verify(token)
-					.getSubject();
+					.build()					// cria o objeto para fazer a verificacao
+					.verify(token)				// verifica de fato o token
+					.getSubject();				// pega o email
 		} catch (JWTVerificationException e) {
-			return "";
+			return null;
 		}
 	}
 	
 	
-	
+	// Para gerar data de expiracao do token
 	private Instant genExpirationDate() {
 		return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
 	}

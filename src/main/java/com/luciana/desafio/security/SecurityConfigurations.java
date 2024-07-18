@@ -14,26 +14,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
-@EnableWebSecurity
+@Configuration							// indica que eh uma classe de configuracao
+@EnableWebSecurity						// indica que essa classe que vai cuidar das configuracoes de seguranca
 public class SecurityConfigurations {
+	
+	@Autowired
+	private CustomUserDetailsService userDetailsService;
 	
 	@Autowired
 	SecurityFilter securityFilter;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		return httpSecurity
-				.csrf(csrf -> csrf.disable())
-				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+		httpSecurity
+				.csrf(csrf -> csrf.disable())																		// desativa a essa configuracao padrao
+				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))		// configura para o tipo autenticacao para STATELESS
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
-						.requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()				// area de login com acesso a todos
+						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()				// area de registro com acesso a todos
+						.requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMIN")				// produtos apenas com acesso de admin
 						.anyRequest().authenticated()
 				)
-				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-				.build();
+				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
+		
+		return httpSecurity.build();
 	}
 	
 	@Bean

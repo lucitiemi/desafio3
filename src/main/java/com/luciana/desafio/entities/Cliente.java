@@ -48,7 +48,7 @@ public class Cliente implements Serializable, UserDetails {
 	private String email;
 	
 	@NotNull(message = "Senha nao pode ser nula")
-	@Size(min=6, max=15, message = "Senha precisa ter entre 6 e 15 caracteres")
+	//@Size(min=6, max=15, message = "Senha precisa ter entre 6 e 15 caracteres")
 	private String senha;
 
 	
@@ -148,9 +148,9 @@ public class Cliente implements Serializable, UserDetails {
 	
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
+	public Collection<? extends GrantedAuthority> getAuthorities() {				// determinar as autorizacoes de forma acumulativa
 		if (this.tipoCliente == TipoCliente.ADMIN) {
-			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));		 
 		}
 		else {
 			return List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -160,8 +160,7 @@ public class Cliente implements Serializable, UserDetails {
 
 	@Override
 	public String getPassword() {						// ???
-		// TODO Auto-generated method stub
-		return null;
+		return senha;
 	}
 
 	@Override

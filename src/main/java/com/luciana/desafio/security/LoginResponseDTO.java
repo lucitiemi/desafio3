@@ -1,5 +1,5 @@
 package com.luciana.desafio.security;
 
-public record LoginResponseDTO(String token) {
+public record LoginResponseDTO(String name, String token) {
 
 }
