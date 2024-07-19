@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.ItemVenda;
@@ -32,7 +33,8 @@ public class TestConfig implements CommandLineRunner {
 	private ProdutoRepository produtoRepository;
 	@Autowired
 	private ItemVendaRepository itemVendaRepository;
-
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	
 	@Override
@@ -40,9 +42,9 @@ public class TestConfig implements CommandLineRunner {
 		
 		// inserindo clientes
 		
-		Cliente cl1 = new Cliente(null, TipoCliente.ADMIN, "Maria", "520.834.160-31", "maria@gmail.com", "123maria");
-		Cliente cl2 = new Cliente(null, TipoCliente.USUARIO, "Alberto", "268.647.710-59", "alberto@gmail.com", "alberto456");
-		Cliente cl3 = new Cliente(null, TipoCliente.USUARIO, "Ana Carolina", "572.761.830-41", "anacarolina@gmail.com", "ana789carol");
+		Cliente cl1 = new Cliente(null, TipoCliente.ADMIN, "Maria", "520.834.160-31", "maria@gmail.com", passwordEncoder.encode("123maria"));
+		Cliente cl2 = new Cliente(null, TipoCliente.USER, "Alberto", "268.647.710-59", "alberto@gmail.com", passwordEncoder.encode("alberto456"));
+		Cliente cl3 = new Cliente(null, TipoCliente.USER, "Ana Carolina", "572.761.830-41", "anacarolina@gmail.com", passwordEncoder.encode("ana789carol"));
 		
 		clienteRepository.saveAll(Arrays.asList(cl1, cl2, cl3));
 		

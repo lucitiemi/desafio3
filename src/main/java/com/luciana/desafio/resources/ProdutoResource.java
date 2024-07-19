@@ -28,7 +28,7 @@ public class ProdutoResource {
 	private ProdutoService service;
 	
 	
-	// Para consultar todos os produto
+	// Para consultar todos os produto - USER
 	@GetMapping
 	public ResponseEntity<List<Produto>> findAll() {
 		 List<Produto> list = service.findAll();
@@ -36,28 +36,28 @@ public class ProdutoResource {
 	 }
 	
 	
-	// Para consultar produto pelo id
+	// Para consultar produto pelo id - USER
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Produto> find(@PathVariable Integer id) {
 		Produto obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
 	
-	// Para consultar todos os produto ativos
+	// Para consultar todos os produto ativos - USER
 	@GetMapping(value = "/ativos")
 	public ResponseEntity<List<Produto>> findProdAtivos() {
 		 List<Produto> list = service.findProdAtivos();
 		 return ResponseEntity.ok().body(list);
 	 }
 	
-	// Para consultar todos os produto inativos
+	// Para consultar todos os produto inativos - ADMIN
 	@GetMapping(value = "/inativos")
 	public ResponseEntity<List<Produto>> findProdInativos() {
 		 List<Produto> list = service.findProdInativos();
 		 return ResponseEntity.ok().body(list);
 	 }
 
-	// Para inserir produto
+	// Para inserir produto - ADMIN
 	@PostMapping
 	public ResponseEntity<Produto> inserir(@Valid @RequestBody Produto obj) {
 		obj = service.inserir(obj);
@@ -66,7 +66,7 @@ public class ProdutoResource {
 	}
 	
 
-	// Para deletar produto
+	// Para deletar produto - ADMIN
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Integer id) {
 		service.deletar(id);
@@ -74,7 +74,7 @@ public class ProdutoResource {
 	}
 		
 	
-	// Para atualizar um produto
+	// Para atualizar um produto - ADMIN
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Produto> atualizar(@PathVariable Integer id, @Valid @RequestBody Produto obj) {
 		obj = service.atualizar(id, obj);
@@ -82,12 +82,12 @@ public class ProdutoResource {
 	}
 	
 	
-	// Para inativar um produto
-		@PutMapping(value = "/{id}/inativar")
-		public ResponseEntity<Produto> inativar(@PathVariable Integer id) {
-			Produto produto = service.inativarProduto(id);
-			return ResponseEntity.ok().body(produto);
-		}
+	// Para inativar um produto - ADMIN
+	@PutMapping(value = "/{id}/inativar")
+	public ResponseEntity<Produto> inativar(@PathVariable Integer id) {
+		Produto produto = service.inativarProduto(id);
+		return ResponseEntity.ok().body(produto);
+	}
 	
 	
 

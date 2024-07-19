@@ -30,7 +30,7 @@ public class VendaResource {
 	private VendaService service;
 	
 	
-	// Para consultar todas as vendas
+	// Para consultar todas as vendas - USER
 	@GetMapping
 	public ResponseEntity<List<Venda>> findAll() {
 		 List<Venda> list = service.findAll();
@@ -38,7 +38,7 @@ public class VendaResource {
 	 }
 
 	
-	// Para consultar uma venda por id
+	// Para consultar uma venda por id - USER
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Venda> find(@PathVariable Integer id) {
 		Venda obj = service.findById(id);
@@ -47,7 +47,7 @@ public class VendaResource {
 	}
 	
 		
-	// Para listar vendas entre datas
+	// Para listar vendas entre datas - USER
 	@PostMapping(value = "/consulta-entre-datas")
 	public ResponseEntity<List<Venda>> consultaEntreDatas(@RequestBody ConsultaDataDTO dto) {
 		List<Venda> list = service.consultaEntreDatas(dto);
@@ -55,7 +55,7 @@ public class VendaResource {
 	 }
 	
 		
-	// Para criar nova venda					url -> /vendas/criar-venda?cliente-id=2
+	// Para criar nova venda - USER					url -> /vendas/criar-venda?cliente-id=2
 	@PostMapping(value = "/criar-venda")
 	public ResponseEntity<Venda> criar(@RequestParam (value = "cliente-id") Integer clienteId) {
 		Venda venda = service.criar(clienteId);
@@ -63,14 +63,14 @@ public class VendaResource {
 		return ResponseEntity.created(uri).body(venda);
 	}
 	
-	// Para inserir item na venda
+	// Para inserir item na venda - USER
 	@PostMapping(value="{vendaId}/inserir-item")
 	public ResponseEntity<Venda> inserirItem(@PathVariable Integer vendaId, @RequestBody ItemVendaDTO obj) {
 		return ResponseEntity.ok().body(service.inserirItem(vendaId, obj));
 	}
 	
 	
-	// Para retirar item na venda
+	// Para retirar item na venda - USER
 	@DeleteMapping(value="/{vendaId}/deletar-item/{produtoId}")
     public ResponseEntity<Venda> retirarItemVenda(@PathVariable Integer vendaId, @PathVariable Integer produtoId) {
 		Venda venda = service.retirarItemVenda(vendaId, produtoId);
@@ -78,7 +78,7 @@ public class VendaResource {
     }
 	
 	
-	// Para atualizar quantidade itemVenda				
+	// Para atualizar quantidade itemVenda - USER				
 	@PutMapping(value = "/{vendaId}/atualizar-qtde-item")
 	public ResponseEntity<Venda> atualizarQtde(@PathVariable Integer vendaId, @RequestBody ItemVendaDTO dto) {
 		Venda venda = service.atualizarItemVenda(vendaId, dto);
@@ -86,7 +86,7 @@ public class VendaResource {
 	}
 	
 		
-	// Para deletar venda
+	// Para deletar venda - ADMIN
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Integer id) {
 		service.deletar(id);
@@ -95,7 +95,7 @@ public class VendaResource {
 	
 
 	
-	// Para atualizar um venda (somente data e status)
+	// Para atualizar um venda (somente data e status) - ADMIN
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Venda> atualizar(@PathVariable Integer id, @RequestBody Venda obj) {
 		obj = service.atualizar(id, obj);
@@ -103,7 +103,7 @@ public class VendaResource {
 	}
 	
 	
-	// Para cancelar venda
+	// Para cancelar venda - USER
 	@PutMapping(value = "/{id}/cancelar")
 	public ResponseEntity<Venda> cancelar(@PathVariable Integer id) {
 		Venda venda = service.cancelarVenda(id);
@@ -111,7 +111,7 @@ public class VendaResource {
 	}
 	
 	
-	// Para gerar pagamento da venda
+	// Para gerar pagamento da venda - USER
 	@PutMapping(value = "/{id}/pagar")
 	public ResponseEntity<Venda> pagar(@PathVariable Integer id) {
 		Venda venda = service.pagar(id);
@@ -119,7 +119,7 @@ public class VendaResource {
 	}
 		
 
-	// Para gerar relatorio mensal
+	// Para gerar relatorio mensal - ADMIN
 	@GetMapping(value = "/relatorio-mensal/{ano}/{mes}") 
 	public ResponseEntity<RelatorioDTO> relatorioMensal(@PathVariable Integer ano, @PathVariable Integer mes) {
 		System.out.println("1");
@@ -128,7 +128,7 @@ public class VendaResource {
 	}
 	
 	
-	// Para gerar relatorio semanal
+	// Para gerar relatorio semanal - ADMIN
 	@GetMapping(value = "/relatorio-semanal/{ano}/{mes}/{dia}") 
 	public ResponseEntity<RelatorioDTO> relatorioSemanal(@PathVariable Integer ano, @PathVariable Integer mes, @PathVariable Integer dia) {
 		RelatorioDTO dto = service.relatorioSemanal(ano, mes, dia);

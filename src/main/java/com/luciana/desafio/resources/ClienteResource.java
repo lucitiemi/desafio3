@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.luciana.desafio.dto.ClienteAtualizacaoDTO;
+import com.luciana.desafio.dto.CriarClienteAdminDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.services.ClienteService;
 
@@ -28,14 +29,14 @@ public class ClienteResource {
 	@Autowired
 	private ClienteService service;
 	
-	// Para consultar todos os clientes
+	// Para consultar todos os clientes - ADMIN
 	@GetMapping
 	public ResponseEntity<List<Cliente>> findAll() {
 		 List<Cliente> list = service.findAll();
 		 return ResponseEntity.ok().body(list);
 	 }
 
-	// Para consultar cliente pelo id
+	// Para consultar cliente pelo id - ADMIN
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Cliente> find(@PathVariable Integer id) {
 		
@@ -44,22 +45,23 @@ public class ClienteResource {
 
 	}
 	
-	// Para criar novo cliente
-	@PostMapping
-	public ResponseEntity<Cliente> criar(@Valid @RequestBody Cliente obj) {
-		obj = service.criar(obj);
+	// Para criar novo cliente admin - ADMIN
+	@PostMapping(value = "/criar-admin")
+	public ResponseEntity<Cliente> criar(@Valid @RequestBody CriarClienteAdminDTO dto) {
+		Cliente obj = new Cliente();
+		obj = service.criar(dto);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
 		return ResponseEntity.created(uri).body(obj);
 	}
 	
-	// Para deletar cliente
-		@DeleteMapping(value = "/{id}")
-		public ResponseEntity<Void> deletar(@PathVariable Integer id) {
-			service.deletar(id);
-			return ResponseEntity.noContent().build();
-		}
+	// Para deletar cliente - ADMIN
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> deletar(@PathVariable Integer id) {
+		service.deletar(id);
+		return ResponseEntity.noContent().build();
+	}
 	
-	// Para atualizar um cliente
+	// Para atualizar um cliente - USER
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<Cliente> atualizar(@PathVariable Integer id, @Valid @RequestBody ClienteAtualizacaoDTO dto) {
 		Cliente cliente = service.atualizar(id, dto);

@@ -1,6 +1,4 @@
-package com.luciana.desafio.security;
-
-import java.util.ArrayList;
+package com.luciana.desafio.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +15,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Autowired
 	private ClienteRepository repository;
 
+	
+	// metodo para transformar um Cliente em um UserDetails
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Cliente user = this.repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-		return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), new ArrayList<>());
+		Cliente user = this.repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));		// aqui tem que ser essa excecao especifica
+		return user;
 	}
 
 }

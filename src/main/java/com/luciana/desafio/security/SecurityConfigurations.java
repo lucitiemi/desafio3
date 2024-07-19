@@ -18,26 +18,43 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity						// indica que essa classe que vai cuidar das configuracoes de seguranca
 public class SecurityConfigurations {
 	
-	@Autowired
-	private CustomUserDetailsService userDetailsService;
+
 	
 	@Autowired
-	SecurityFilter securityFilter;
+	private SecurityFilter securityFilter;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity
+		return httpSecurity
 				.csrf(csrf -> csrf.disable())																		// desativa a essa configuracao padrao
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))		// configura para o tipo autenticacao para STATELESS
 				.authorizeHttpRequests(authorize -> authorize
-						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()				// area de login com acesso a todos
-						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()				// area de registro com acesso a todos
-						.requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMIN")				// produtos apenas com acesso de admin
+						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()				
+						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()	
+						
+						.requestMatchers(HttpMethod.GET, "/clientes/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.POST, "/clientes/criar-admin").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/clientes/**").hasRole("ADMIN")
+						
+						.requestMatchers(HttpMethod.GET, "/produtos").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/produtos/inativos").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/produtos/{id}").hasRole("USER")
+						.requestMatchers(HttpMethod.GET, "/produtos/ativos").hasRole("USER")
+						.requestMatchers(HttpMethod.POST, "/produtos/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.DELETE, "/produtos/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/produtos/**").hasRole("ADMIN")
+						
+						.requestMatchers(HttpMethod.DELETE, "/vendas/{id}").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.PUT, "/vendas/{id}").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/vendas/relatorio-mensal/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/vendas/relatorio-semanal/**").hasRole("ADMIN")
+						
+						.requestMatchers(HttpMethod.PUT, "/caches/**").hasRole("ADMIN")
+			
 						.anyRequest().authenticated()
 				)
-				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class);
-		
-		return httpSecurity.build();
+				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)		// faz a autenticacao do usuario antes dos filtros de permissoes
+				.build();
 	}
 	
 	@Bean

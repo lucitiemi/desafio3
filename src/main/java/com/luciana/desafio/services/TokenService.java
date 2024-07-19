@@ -1,4 +1,4 @@
-package com.luciana.desafio.security;
+package com.luciana.desafio.services;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -10,7 +10,10 @@ import org.springframework.stereotype.Service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.luciana.desafio.dto.TokenDatesDTO;
 import com.luciana.desafio.entities.Cliente;
 
 @Service
@@ -25,7 +28,7 @@ public class TokenService {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
 			String token = JWT.create()
-					.withIssuer("auth-api")
+					.withIssuer("desafio-api")
 					.withSubject(cliente.getEmail())
 					.withIssuedAt(Instant.now())
 					.withExpiresAt(this.genExpirationDate())
@@ -43,16 +46,30 @@ public class TokenService {
 		try {
 			Algorithm algorithm = Algorithm.HMAC256(secret);
 			return JWT.require(algorithm)		
-					.withIssuer("auth-api")
+					.withIssuer("desafio-api")
 					.build()					// cria o objeto para fazer a verificacao
 					.verify(token)				// verifica de fato o token
-					.getSubject();				// pega o email
+					.getSubject();				// pega e retorna o email
 		} catch (JWTVerificationException e) {
 			return null;
 		}
 	}
 	
 	
+	// Para pegar datas do token
+		public TokenDatesDTO getTokenDates(String token) {
+			try {
+				DecodedJWT decodedToken = JWT.decode(token);
+				Instant issuedDate = decodedToken.getIssuedAt().toInstant();
+				Instant expirationDate = decodedToken.getExpiresAt().toInstant();
+				TokenDatesDTO dto = new TokenDatesDTO(issuedDate, expirationDate);
+				return dto;
+			} catch (JWTDecodeException e) {
+				return null;
+			}
+		}
+	
+		
 	// Para gerar data de expiracao do token
 	private Instant genExpirationDate() {
 		return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));

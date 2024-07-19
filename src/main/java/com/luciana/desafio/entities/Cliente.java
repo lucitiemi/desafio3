@@ -22,7 +22,6 @@ import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 
 @Entity
@@ -47,8 +46,7 @@ public class Cliente implements Serializable, UserDetails {
 	@NotBlank(message = "E-mail nao pode ser vazio")
 	private String email;
 	
-	@NotNull(message = "Senha nao pode ser nula")
-	//@Size(min=6, max=15, message = "Senha precisa ter entre 6 e 15 caracteres")
+	@NotBlank(message = "Senha nao pode ser vazia")
 	private String senha;
 
 	
@@ -159,7 +157,7 @@ public class Cliente implements Serializable, UserDetails {
 	}
 
 	@Override
-	public String getPassword() {						// ???
+	public String getPassword() {						
 		return senha;
 	}
 

@@ -11,7 +11,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.luciana.desafio.dto.ClienteAtualizacaoDTO;
+import com.luciana.desafio.dto.CriarClienteAdminDTO;
 import com.luciana.desafio.entities.Cliente;
+import com.luciana.desafio.entities.enums.TipoCliente;
 import com.luciana.desafio.repositories.ClienteRepository;
 import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
@@ -40,12 +42,18 @@ public class ClienteService {
 	}
 
 	
-	// Para criar novo cliente
+	// Para criar novo cliente admin
 	@CacheEvict(allEntries = true)
-	public Cliente criar(Cliente obj) {
+	public Cliente criar(CriarClienteAdminDTO dto) {
+		Cliente obj = new Cliente();
+		obj.setTipoCliente(TipoCliente.ADMIN);
+		obj.setNome(dto.nome());
+		obj.setCpf(dto.cpf());
+		obj.setEmail(dto.email());
+		obj.setSenha(dto.senha());
 		return repository.save(obj);
 	}
-	
+
 	
 	// Para deletar cliente 
 	@CacheEvict(allEntries = true)

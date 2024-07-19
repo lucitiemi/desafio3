@@ -3,7 +3,7 @@ package com.luciana.desafio.entities.enums;
 public enum TipoCliente {
 	
 	ADMIN("admin"),
-	USUARIO("user");
+	USER("user");
 	
 	private String role;
 	

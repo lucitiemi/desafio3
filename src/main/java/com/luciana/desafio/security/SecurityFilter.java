@@ -10,6 +10,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.repositories.ClienteRepository;
+import com.luciana.desafio.services.TokenService;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,29 +21,33 @@ import jakarta.servlet.http.HttpServletResponse;
 public class SecurityFilter extends OncePerRequestFilter {
 	
 	@Autowired
-	TokenService tokenService;
+	private TokenService tokenService;
 	
 	@Autowired
-	ClienteRepository clienteRepository;
+	private ClienteRepository clienteRepository;
 	
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		var token = this.recoverToken(request);						// recupera o token da requisicao
-		var email = tokenService.validateToken(token);				// valida o token
-		
+		var token = this.recoverToken(request);																					// recupera o token da requisicao
+						
 		if(token != null) {
-			Cliente user = clienteRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-			//var authorities = Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
-	        //var authentication = new UsernamePasswordAuthenticationToken(user, null, authorities);
-			var authentication = new UsernamePasswordAuthenticationToken(user, user.getAuthorities());
-			SecurityContextHolder.getContext().setAuthentication(authentication);
+			var email = tokenService.validateToken(token);																		// valida o token (o metodo ja retorna o email)
+			Cliente user = clienteRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found")); 		// como o user ja tem um token, dificilmente cairá nessa excecao
+			var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+			//System.out.println(email);
+			//System.out.println(authentication);
+			SecurityContextHolder.getContext().setAuthentication(authentication);												// salva no contexto a autenticacao do token
 		}
 		filterChain.doFilter(request, response);
 	}
+	
 
-	private String recoverToken(HttpServletRequest request) {		// esse metodo pega o token da requisicao
-		var authHeader = request.getHeader("Authorization");		// onde, na requisicao, esta o token
+	// metodo auxiliar para pegar o token da requisicao
+	private String recoverToken(HttpServletRequest request) {		
+		var authHeader = request.getHeader("Authorization");		// onde, na requisicao, sendo enviado o token
+		//System.out.println(authHeader);
+		
 		if(authHeader == null) {
 			return null;
 		}

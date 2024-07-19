@@ -1,4 +1,4 @@
-package com.luciana.desafio.security;
+package com.luciana.desafio.resources;
 
 import java.util.Optional;
 
@@ -10,10 +10,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.luciana.desafio.dto.LoginRequestDTO;
+import com.luciana.desafio.dto.LoginResponseDTO;
 import com.luciana.desafio.dto.RegisterDTO;
+import com.luciana.desafio.dto.TokenDatesDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.enums.TipoCliente;
 import com.luciana.desafio.repositories.ClienteRepository;
+import com.luciana.desafio.services.TokenService;
 
 import jakarta.validation.Valid;
 
@@ -26,34 +30,26 @@ public class AuthenticationResource {
 	private ClienteRepository repository;
 	
 	@Autowired
-	TokenService tokenService;
+	private TokenService tokenService;
 	
 	@Autowired
-	PasswordEncoder passwordEncoder;
+	private PasswordEncoder passwordEncoder;
 	
 
 	@PostMapping(value = "/login")
-	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid AuthenticationDTO dto) {
+	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
 		
 		Cliente cliente = this.repository.findByEmail(dto.email()).orElseThrow(() -> new RuntimeException("User not Found")); // criar excecao personalizada
 		
 		if(passwordEncoder.matches(dto.senha(), cliente.getPassword())) {
 			String token = this.tokenService.generateToken(cliente);
-			return ResponseEntity.ok(new LoginResponseDTO(cliente.getNome(), token));
+			TokenDatesDTO datesDTO = tokenService.getTokenDates(token);
+			return ResponseEntity.ok(new LoginResponseDTO(cliente.getNome(), token, datesDTO.issuedDate(), datesDTO.expirationDate()));
 		}
 		return ResponseEntity.badRequest().build();
 		
-		/*
-		var usernamePassword = new UsernamePasswordAuthenticationToken(dto.email(), dto.senha());
-		var auth = this.authenticationManager.authenticate(usernamePassword);
-		
-		var token = tokenService.generateToken((Cliente)auth.getPrincipal());
-		
-		return ResponseEntity.ok(new LoginResponseDTO(token));	
-		*/
 	}
-	
-	
+		
 	@PostMapping(value = "/register")
 	public ResponseEntity<LoginResponseDTO> register(@RequestBody @Valid RegisterDTO dto) {
 		
@@ -61,31 +57,21 @@ public class AuthenticationResource {
 		
 		if (cliente.isEmpty()) {
 			Cliente novoCliente = new Cliente();
-			novoCliente.setTipoCliente(TipoCliente.USUARIO);
+			novoCliente.setTipoCliente(TipoCliente.USER);
 			novoCliente.setNome(dto.nome());
 			novoCliente.setCpf(dto.cpf());
 			novoCliente.setEmail(dto.email());
 			novoCliente.setSenha(passwordEncoder.encode(dto.senha()));
 			this.repository.save(novoCliente);
 			
-			String token = this.tokenService.generateToken(novoCliente);
-			return ResponseEntity.ok(new LoginResponseDTO(novoCliente.getNome(), token));
+			String token = this.tokenService.generateToken(novoCliente);						
+			TokenDatesDTO datesDTO = tokenService.getTokenDates(token);
+			return ResponseEntity.ok(new LoginResponseDTO(novoCliente.getNome(), token, datesDTO.issuedDate(), datesDTO.expirationDate()));
 
 		}
 		return ResponseEntity.badRequest().build();
 		
 		
-		/*
-		if (this.repository.findByEmail(dto.email()) != null)
-			return ResponseEntity.badRequest().build();
-
-		String encryptedPassword = new BCryptPasswordEncoder().encode(dto.senha());
-		Cliente novoCliente = new Cliente(null, dto.role(), dto.nome(), dto.cpf(), dto.email(), dto.senha());
-		
-		this.repository.save(novoCliente);
-		
-		return ResponseEntity.ok().build();
-		*/
 	}
 	
 	
