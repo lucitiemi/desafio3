@@ -15,6 +15,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.luciana.desafio.dto.TokenDatesDTO;
 import com.luciana.desafio.entities.Cliente;
+import com.luciana.desafio.services.exceptions.GenerationTokenException;
 
 @Service
 public class TokenService {
@@ -36,7 +37,7 @@ public class TokenService {
 			return token;
 		} 
 		catch (JWTCreationException e) {
-			throw new RuntimeException("Error while generating token", e);				// criar classe personalizada de excecao!
+			throw new GenerationTokenException();				
 		}
 	}
 	

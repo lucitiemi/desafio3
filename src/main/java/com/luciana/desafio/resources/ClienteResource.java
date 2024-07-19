@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.luciana.desafio.dto.AlteracaoSenhaDTO;
 import com.luciana.desafio.dto.ClienteAtualizacaoDTO;
 import com.luciana.desafio.dto.CriarClienteAdminDTO;
+import com.luciana.desafio.dto.ResponseResetSenhaDTO;
 import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.services.ClienteService;
 
@@ -67,8 +69,23 @@ public class ClienteResource {
 		Cliente cliente = service.atualizar(id, dto);
 		return ResponseEntity.ok().body(cliente);
 	}
+	
+	
+	
+	// Para solicitar alteracao de senha - USER
+	@PutMapping("/{clienteId}/solicitar-alteracao-senha")
+	public ResponseEntity<ResponseResetSenhaDTO> solicitarAltSenha(@PathVariable Integer clienteId) {
+		ResponseResetSenhaDTO respDTO = service.solicitarAltSenha(clienteId);
+		return ResponseEntity.ok().body(respDTO);
+	}
 		
 	
+	// Para alterar a senha - USER
+	@PutMapping("/{clienteId}/alterar-senha")
+	public ResponseEntity<ResponseResetSenhaDTO> alterarSenha(@PathVariable Integer clienteId, @RequestBody AlteracaoSenhaDTO dto) {
+		ResponseResetSenhaDTO respDTO = service.alterarSenha(clienteId, dto);
+		return ResponseEntity.ok().body(respDTO);
+	}
 	
 	
 

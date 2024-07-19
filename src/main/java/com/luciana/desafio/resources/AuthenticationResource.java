@@ -18,6 +18,8 @@ import com.luciana.desafio.entities.Cliente;
 import com.luciana.desafio.entities.enums.TipoCliente;
 import com.luciana.desafio.repositories.ClienteRepository;
 import com.luciana.desafio.services.TokenService;
+import com.luciana.desafio.services.exceptions.IncorrectPasswordException;
+import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 
 import jakarta.validation.Valid;
 
@@ -39,14 +41,14 @@ public class AuthenticationResource {
 	@PostMapping(value = "/login")
 	public ResponseEntity<LoginResponseDTO> login(@RequestBody @Valid LoginRequestDTO dto) {
 		
-		Cliente cliente = this.repository.findByEmail(dto.email()).orElseThrow(() -> new RuntimeException("User not Found")); // criar excecao personalizada
+		Cliente cliente = this.repository.findByEmail(dto.email()).orElseThrow(() -> new ResourceNotFoundException(dto.email())); 
 		
 		if(passwordEncoder.matches(dto.senha(), cliente.getPassword())) {
 			String token = this.tokenService.generateToken(cliente);
 			TokenDatesDTO datesDTO = tokenService.getTokenDates(token);
 			return ResponseEntity.ok(new LoginResponseDTO(cliente.getNome(), token, datesDTO.issuedDate(), datesDTO.expirationDate()));
 		}
-		return ResponseEntity.badRequest().build();
+		else throw new IncorrectPasswordException();
 		
 	}
 		

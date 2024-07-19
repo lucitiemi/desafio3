@@ -48,6 +48,8 @@ public class Cliente implements Serializable, UserDetails {
 	
 	@NotBlank(message = "Senha nao pode ser vazia")
 	private String senha;
+	
+	private String tokenResetSenha;
 
 	
 	// associacoes:
@@ -67,6 +69,7 @@ public class Cliente implements Serializable, UserDetails {
 		this.cpf = cpf;
 		this.email = email;
 		this.senha = senha;
+		this.tokenResetSenha = null;
 	}
 
 	
@@ -122,6 +125,15 @@ public class Cliente implements Serializable, UserDetails {
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+	
+	public String getTokenResetSenha() {
+		return tokenResetSenha;
+	}
+
+	public void setTokenResetSenha(String tokenResetSenha) {
+		this.tokenResetSenha = tokenResetSenha;
+	}
+
 
 	
 	
@@ -166,6 +178,7 @@ public class Cliente implements Serializable, UserDetails {
 		return email;
 	}
 
+	
 	
 	
 	

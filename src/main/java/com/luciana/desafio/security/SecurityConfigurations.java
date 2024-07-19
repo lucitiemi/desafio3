@@ -29,9 +29,12 @@ public class SecurityConfigurations {
 				.csrf(csrf -> csrf.disable())																		// desativa a essa configuracao padrao
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))		// configura para o tipo autenticacao para STATELESS
 				.authorizeHttpRequests(authorize -> authorize
+						.requestMatchers("/h2-console/**").permitAll()	
 						.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()				
 						.requestMatchers(HttpMethod.POST, "/auth/register").permitAll()	
 						
+						.requestMatchers(HttpMethod.PUT, "/clientes/{clienteId}/solicitar-alteracao-senha").hasRole("USER")
+						.requestMatchers(HttpMethod.PUT, "/clientes/{clienteId}/alterar-senha").hasRole("USER")
 						.requestMatchers(HttpMethod.GET, "/clientes/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.POST, "/clientes/criar-admin").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.DELETE, "/clientes/**").hasRole("ADMIN")
@@ -53,6 +56,9 @@ public class SecurityConfigurations {
 			
 						.anyRequest().authenticated()
 				)
+				.headers(headers -> headers
+	                    .frameOptions(frameOptions -> frameOptions.sameOrigin())  					// permite frames de mesma origem para o console do H2
+	                )
 				.addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)		// faz a autenticacao do usuario antes dos filtros de permissoes
 				.build();
 	}

@@ -14,7 +14,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.luciana.desafio.services.exceptions.CanceledOrderException;
 import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.EmptyOrderException;
+import com.luciana.desafio.services.exceptions.GenerationTokenException;
+import com.luciana.desafio.services.exceptions.IncorrectPasswordException;
 import com.luciana.desafio.services.exceptions.InsufficientStockException;
+import com.luciana.desafio.services.exceptions.InvalidResetPasswordTokenException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 import com.luciana.desafio.services.exceptions.UnavailableOrderException;
 
@@ -99,5 +102,31 @@ public class ResourceExceptionHandler {
 		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
 		return ResponseEntity.status(status).body(erro);
 	}
+	
+	@ExceptionHandler(GenerationTokenException.class)				
+	public ResponseEntity<StandardError> errorWhileGeneratingToken(GenerationTokenException e, HttpServletRequest request) {
+		String error = "Bad Request";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+	
+	
+	@ExceptionHandler(InvalidResetPasswordTokenException.class)				
+	public ResponseEntity<StandardError> invalidResetPasswordTokenException(InvalidResetPasswordTokenException e, HttpServletRequest request) {
+		String error = "Bad Request";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+	
+	@ExceptionHandler(IncorrectPasswordException.class)				
+	public ResponseEntity<StandardError> incorrectPasswordException(IncorrectPasswordException e, HttpServletRequest request) {
+		String error = "Bad Request";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		StandardError erro = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+		return ResponseEntity.status(status).body(erro);
+	}
+	
 	
 }
