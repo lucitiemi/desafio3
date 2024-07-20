@@ -33,7 +33,7 @@ public class Cliente implements Serializable, UserDetails {
 	private Integer id;
 	
 	@NotNull(message = "Tipo de Cliente nao pode ser nulo")		
-	private TipoCliente tipoCliente;							// role
+	private TipoCliente tipoCliente;							
 		
 	@NotBlank(message = "Nome nao pode ser vazio")
 	private String nome;
@@ -158,7 +158,7 @@ public class Cliente implements Serializable, UserDetails {
 	
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {				// determinar as autorizacoes de forma acumulativa
+	public Collection<? extends GrantedAuthority> getAuthorities() {				// determina as autorizacoes de forma acumulativa
 		if (this.tipoCliente == TipoCliente.ADMIN) {
 			return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));		 
 		}

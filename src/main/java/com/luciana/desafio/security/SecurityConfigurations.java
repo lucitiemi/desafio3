@@ -52,7 +52,7 @@ public class SecurityConfigurations {
 						.requestMatchers(HttpMethod.GET, "/vendas/relatorio-mensal/**").hasRole("ADMIN")
 						.requestMatchers(HttpMethod.GET, "/vendas/relatorio-semanal/**").hasRole("ADMIN")
 						
-						.requestMatchers(HttpMethod.PUT, "/caches/**").hasRole("ADMIN")
+						.requestMatchers(HttpMethod.GET, "/caches/**").permitAll()
 			
 						.anyRequest().authenticated()
 				)

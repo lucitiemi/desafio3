@@ -27,7 +27,7 @@ public class ItemVenda implements Serializable  {
 	private Double preco;
 	
 	
-	// contrutores:
+	// construtores:
 	public ItemVenda() {}
 
 	public ItemVenda(Venda venda, Produto produto, Integer quantidade, Double preco) {

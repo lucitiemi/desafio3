@@ -45,7 +45,7 @@ public class ItemVendaService {
 	}
 	
 	
-	// Para deletar itemVenda								so posso deletar se o status estiver pendente
+	// Para deletar itemVenda								
 	public void deletar(ItemVendaPK itemVendaPK) {
 		try {
 			if (repository.existsById(itemVendaPK)) {
@@ -54,7 +54,7 @@ public class ItemVendaService {
 				throw new ResourceNotFoundException(itemVendaPK);			
 			}		
 		} catch (DataIntegrityViolationException e) {			
-			throw new DatabaseException(e.getMessage());		
+			throw new DatabaseException("Itens de venda não podem ser deletados");		
 		}	
 	}
 	

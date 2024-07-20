@@ -1,5 +1,6 @@
 package com.luciana.desafio.services;
 
+import java.time.DateTimeException;
 import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ import com.luciana.desafio.services.exceptions.CanceledOrderException;
 import com.luciana.desafio.services.exceptions.DatabaseException;
 import com.luciana.desafio.services.exceptions.EmptyOrderException;
 import com.luciana.desafio.services.exceptions.InsufficientStockException;
+import com.luciana.desafio.services.exceptions.InvalidDateException;
 import com.luciana.desafio.services.exceptions.ResourceNotFoundException;
 import com.luciana.desafio.services.exceptions.UnavailableOrderException;
 
@@ -193,7 +195,7 @@ public class VendaService {
 				throw new ResourceNotFoundException(id);			
 			}		
 		} catch (DataIntegrityViolationException e) {			
-			throw new DatabaseException(e.getMessage());		
+			throw new DatabaseException("Vendas que já possuem produtos inseridos nao podem ser deletadas");		
 		}	
 	}
 	
@@ -265,37 +267,45 @@ public class VendaService {
 	
 	// Para gerar relatorio mensal
 	public RelatorioDTO relatorioMensal(Integer mes, Integer ano) {
+		try {
+			YearMonth mesRelat = YearMonth.of(ano, mes);		
 		
-		YearMonth mesRelat = YearMonth.of(ano, mes);		
-		
-		LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
-		LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atTime(23, 59, 59);
-		
-		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
-		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
-		
-		RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
-		
-		return dto;
+			LocalDateTime dataInicialLocal = mesRelat.atDay(1).atStartOfDay();
+			LocalDateTime dataFinalLocal = mesRelat.atEndOfMonth().atTime(23, 59, 59);
+			
+			Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
+			Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
+			
+			RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
+			
+			return dto;
+		} catch (DateTimeException e) {
+			throw new InvalidDateException();
+		}
 	}
 
 
 	// Para gerar relatorio semanal
 	public RelatorioDTO relatorioSemanal(Integer ano, Integer mes, Integer dia) {
 		
-		LocalDateTime dataConsulta = LocalDateTime.of(ano, mes, dia, 0, 0);
+		try {
+			LocalDateTime dataConsulta = LocalDateTime.of(ano, mes, dia, 0, 0);
+			
+			DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
+			
+			LocalDateTime dataInicialLocal = dataConsulta.minusDays(diaDaSemana.getValue()-1);
+			LocalDateTime dataFinalLocal = dataInicialLocal.plusDays(7).minusSeconds(1);
+			
+			Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
+			Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
+			
+			RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
+			
+			return dto;
+		} catch (DateTimeException e) {
+			throw new InvalidDateException();
+		}
 		
-		DayOfWeek diaDaSemana = dataConsulta.getDayOfWeek();
-		
-		LocalDateTime dataInicialLocal = dataConsulta.minusDays(diaDaSemana.getValue()-1);
-		LocalDateTime dataFinalLocal = dataInicialLocal.plusDays(7).minusSeconds(1);
-		
-		Instant dataInicial = dataInicialLocal.toInstant(ZoneOffset.UTC);
-		Instant dataFinal = dataFinalLocal.toInstant(ZoneOffset.UTC);
-		
-		RelatorioDTO dto = gerarRelatorio(dataInicial, dataFinal);
-		
-		return dto;
 	}
 	
 	

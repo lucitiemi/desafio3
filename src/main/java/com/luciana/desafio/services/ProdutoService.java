@@ -69,7 +69,7 @@ public class ProdutoService {
 				throw new ResourceNotFoundException(id);			
 			}		
 		} catch (DataIntegrityViolationException e) {			
-			throw new DatabaseException(e.getMessage());		
+			throw new DatabaseException("Produtos ja inseridos em alguma venda não podem ser deletados");		
 		}		
 	}
 	

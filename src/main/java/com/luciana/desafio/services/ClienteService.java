@@ -78,7 +78,7 @@ public class ClienteService {
 				throw new ResourceNotFoundException(id);			
 			}		
 		} catch (DataIntegrityViolationException e) {			
-			throw new DatabaseException(e.getMessage());		
+			throw new DatabaseException("Clientes já vinculado a uma venda nao podem ser deletados");		
 		}		
 	}
 
